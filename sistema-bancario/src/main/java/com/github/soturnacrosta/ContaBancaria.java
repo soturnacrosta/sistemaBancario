@@ -7,11 +7,13 @@ public class ContaBancaria {
     private String agencia, conta;
     protected double saldo;
     private ArrayList <Transacao> historico = new ArrayList <> (); // para gerar o histórico de transações
+    private ArrayList <ContaBancaria> contasAbertas = new ArrayList<>();
 
         double sacar (double valor) {
 
             if (valor <= saldo) { // verifica se o saque não excede o saldo da conta
 
+                
                 saldo = saldo - valor;
 
                 System.out.println("Saque efetuado com sucesso!");
@@ -58,26 +60,46 @@ public class ContaBancaria {
 
         }
 
-        double realizarTed (double valor) {
+        void realizarTed (double valor, String contaDestino) {
 
-            if (valor <= saldo) { // verifica se há saldo para transação
+            boolean contaEncontrada = false;
 
-                saldo = saldo - valor;
+            for (ContaBancaria contasBancaria : contasAbertas) {
 
-                System.out.println("Transação efetuada com sucesso!");
-                System.out.println("TED no valor de: " + valor + "R$.");
-                System.out.println("Novo saldo: " + saldo + ".");
+                if (contaDestino.equals(contasBancaria.getConta())) {  // conta destino já é o numero da conta!
 
-                return saldo;
+                    contaEncontrada = true;
+                    break;
+
+                }
+
+            }
+            
+            if (contaEncontrada) {
+
+                if (valor <= saldo) { // verifica se há saldo para transação
+
+                    Transacao novaTransacao = new Transacao(); // tirar extrato - registrando transação
+                    // realiza a transação na clase Transacao
+                    
+                    System.out.println("Transação efetuada com sucesso!");
+                    System.out.println("TED no valor de: " + valor + "R$.");
+                    System.out.println("Novo saldo: " + saldo + ".");
+
+                }
+
+                else { // caso nao encontrada
+
+                    System.out.println("Erro! Não há saldo suficiente na conta.");
+                    System.out.println("Saldo disponível: " + saldo + ".");
+
+                }
 
             }
 
             else {
 
-                System.out.println("Erro! Não há saldo suficiente na conta.");
-                System.out.println("Saldo disponível: " + saldo + ".");
-
-                return saldo;
+                System.out.println("Erro! Conta " + contaDestino + " não encontrada!");
 
             }
 
@@ -121,6 +143,22 @@ public class ContaBancaria {
 
         public void setOperacoes(Operacoes operacoes) {
             this.operacoes = operacoes;
+        }
+
+        public ArrayList<Transacao> getHistorico() {
+            return historico;
+        }
+
+        public void setHistorico(ArrayList<Transacao> historico) {
+            this.historico = historico;
+        }
+
+        public ArrayList<ContaBancaria> getContasAbertas() {
+            return contasAbertas;
+        }
+
+        public void setContasAbertas(ArrayList<ContaBancaria> contasAbertas) {
+            this.contasAbertas = contasAbertas;
         }
         
 }
