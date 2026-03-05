@@ -51,13 +51,13 @@ public class Gerente {
 
         }
 
-        void fecharConta (Usuario usuarioDeletar) {
+        void fecharConta (String cpfDeletar) {
 
             boolean existe = false;
 
             for (Usuario u : usuarios) {
 
-                if (u.getCpf().equals(usuarioDeletar.getCpf())) {
+                if (u.getCpf().equals(cpfDeletar)) {
 
                     existe = true;
 
@@ -67,16 +67,17 @@ public class Gerente {
 
             }
 
-            if (existe) { // se não houver cadastro, não há conta para fechar
+            if (existe) {
 
-                System.out.println("Erro! Não existe cadastro para este CPF!");
+                // se existir um usuario com o CPF
+                usuarios.remove(cpfDeletar); // remove da lista
+                System.out.println("Sucesso! Conta encerrada!");
 
             }
 
-            else {
+            else { // se não houver cadastro, não há conta para fechar
 
-                // se existir um usuario com o CPF
-                usuarios.remove(usuarioDeletar); // remove da lista
+                System.out.println("Erro! Não existe cadastro para este CPF!");
 
             }
  

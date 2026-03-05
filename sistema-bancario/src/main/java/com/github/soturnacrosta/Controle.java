@@ -101,10 +101,12 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                                     case "1": // abrir uma conta
                                         
+                                    gerenteAbrirConta();
                                         break;
                                 
                                     case "2": // encerrar uma conta
 
+                                        gerenteFecharConta();
                                         break;
 
                                     case "0": // sair 
@@ -198,5 +200,35 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
         }
 
+        void gerenteAbrirConta () {
+
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX ABRIR CONTA XXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("Digite o CPF do cliente para abrir conta:");
+                String abrirCPF = input.nextLine();
+
+            System.out.println("Digite o nome completo:");
+                String abrirNome = input.nextLine();
+
+            System.out.println("Digite uma senha:");
+                String abrirSenha = input.nextLine();
+
+            ContaBancaria novaConta = new ContaBancaria();
+            Usuario usuario = new Usuario (contaBancaria, abrirSenha, abrirNome, abrirCPF);           
+            ContaBancaria.contasAbertas.add(novaConta);
+            
+        } 
+
+        void gerenteFecharConta () {
+
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX FECHAR CONTA XXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("Digite o CPF do cliente para encerrar conta:");
+                String encerrarConta = input.nextLine();
+
+            Gerente gerente = new Gerente(); //instancia o gerente
+            gerente.fecharConta(encerrarConta); //fecha a conta com o cpf utilizado da entrada do usuario conforme a classe Gerente
+
+        }
 }
 

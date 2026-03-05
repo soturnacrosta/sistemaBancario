@@ -5,8 +5,8 @@ public class Main {
 
         Controle painel = new Controle();
 
-         ContaBancaria conta = new ContaBancaria();
-       conta.setConta("123");
+        ContaBancaria conta = new ContaBancaria();
+        conta.setConta("123");
         conta.setSaldo(300);
         conta.contasAbertas.add(conta);
 

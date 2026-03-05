@@ -3,7 +3,14 @@ package com.github.soturnacrosta;
 public class Usuario {
 
     private ContaBancaria contaBancaria;
-    private String login, senha, nome, cpf;
+    private String senha, nome, cpf;
+
+            public Usuario(ContaBancaria contaBancaria, String senha, String nome, String cpf) {
+            this.contaBancaria = contaBancaria;
+            this.senha = senha;
+            this.nome = nome;
+            this.cpf = cpf;
+        }
 
         public ContaBancaria getContaBancaria() {
             return contaBancaria;
@@ -12,14 +19,6 @@ public class Usuario {
         public void setContaBancaria(ContaBancaria contaBancaria) {
             this.contaBancaria = contaBancaria;
         } 
-
-        public String getLogin() {
-            return login;
-        }
-
-        public void setLogin(String login) {
-            this.login = login;
-        }
 
         public String getSenha() {
             return senha;

@@ -4,12 +4,19 @@ import java.util.ArrayList;
 public class ContaBancaria {
     
     private Operacoes operacoes;
-    private String agencia, conta;
+    private String agencia, conta, numero;
     protected double saldo;
+    private static int contadorContas = 1000; //contador de numero da conta do cliente
     private ArrayList <Transacao> historico = new ArrayList <> (); // para gerar o histórico de transações
     static ArrayList <ContaBancaria> contasAbertas = new ArrayList<>();
-    private Usuario usuario = new Usuario();
+    private Usuario usuario;
 
+        public ContaBancaria () {
+
+            contadorContas++; // Incrementa cada vez que uma nova conta é criada
+            this.numero = String.valueOf(contadorContas);
+
+        }
         double sacar (double valor) {
 
             if (valor <= saldo) { // verifica se o saque não excede o saldo da conta
@@ -177,6 +184,9 @@ public class ContaBancaria {
 
         public void setContasAbertas(ArrayList<ContaBancaria> contasAbertas) {
             this.contasAbertas = contasAbertas;
+        }
+        public String getNumero() {
+            return numero;
         }
         
 }
