@@ -6,18 +6,24 @@ public class Transacao {
     protected double valor;
     protected Date data;
     protected String descricao;
-    private ContaBancaria contaBancaria;
-    private Usuario usuarioTransacao;
 
-        public void realizarTed (double valor) { // registro do extrato
+    public Transacao(double valor, Date data, String descricao) { // precisa do construtor para gerar o recibo
+        this.valor = valor;
+        this.data = new Date(); // gera a data ATUAL!!
+        this.descricao = descricao;
+    }
 
-            this.valor = valor; // recebe valor do método para registrar no extrato
+    // getters e setters para que a classe Conta Bancaria consiga ler, respeitando o projeto
+    public double getValor() {
+        return valor;
+    }
 
-            System.out.println("Nome: " + usuarioTransacao.getNome());
-            System.out.println("Valor: " + valor);
-            System.out.println("Data: " + valor);
-            System.out.println("Saldo: " + contaBancaria.getSaldo());
+    public Date getData() {
+        return data;
+    }
 
-        }
+    public String getDescricao() {
+        return descricao;
+    }
     
 }

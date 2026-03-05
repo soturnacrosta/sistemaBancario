@@ -60,10 +60,12 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                                     case "4": // Ver saldo
 
+                                        usuarioSaldo();
                                         break;
                                     
                                     case "5": // Tirar extrato
 
+                                        contaBancaria.imprimirExtrato();
                                         break; 
 
                                     case "0": // sair
@@ -178,8 +180,21 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
             System.out.println("Digito o valor:");
                 double ted = input.nextDouble();
+                input.nextLine();
 
-            contaBancaria.realizarTed(ted, contaDestino); // conta destino já é o numero da conta!
+            System.out.println("Adicione uma descrição:");  
+                String descricao = input.nextLine();
+
+            contaBancaria.realizarTed(ted, contaDestino, descricao); // conta destino já é o numero da conta!
+
+        }
+
+        void usuarioSaldo () {
+
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX DEPÓSITO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("Saldo: " + contaBancaria.getSaldo() +"R$.");
+            System.out.println();
 
         }
 

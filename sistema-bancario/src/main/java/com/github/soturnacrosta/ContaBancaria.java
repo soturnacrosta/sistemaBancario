@@ -7,7 +7,8 @@ public class ContaBancaria {
     private String agencia, conta;
     protected double saldo;
     private ArrayList <Transacao> historico = new ArrayList <> (); // para gerar o histórico de transações
-    private ArrayList <ContaBancaria> contasAbertas = new ArrayList<>();
+    static ArrayList <ContaBancaria> contasAbertas = new ArrayList<>();
+    private Usuario usuario = new Usuario();
 
         double sacar (double valor) {
 
@@ -60,7 +61,7 @@ public class ContaBancaria {
 
         }
 
-        void realizarTed (double valor, String contaDestino) {
+        void realizarTed (double valor, String contaDestino, String descricao) {
 
             boolean contaEncontrada = false;
 
@@ -79,8 +80,10 @@ public class ContaBancaria {
 
                 if (valor <= saldo) { // verifica se há saldo para transação
 
-                    Transacao novaTransacao = new Transacao(); // tirar extrato - registrando transação
-                    // realiza a transação na clase Transacao
+                    saldo = saldo - valor;
+
+                    Transacao transacao = new Transacao( (valor), null, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
+                    historico.add(transacao); // adicione a lista global
                     
                     System.out.println("Transação efetuada com sucesso!");
                     System.out.println("TED no valor de: " + valor + "R$.");
@@ -105,9 +108,24 @@ public class ContaBancaria {
 
         }
 
-        public ArrayList<Transacao> getExtrato() { // gera o extrato através de uma arrayList de transações (funções) registradas 
+        public void imprimirExtrato() { // gera o extrato através de uma arrayList de transações (funções) registradas 
 
-            return historico;
+            if (this.historico.isEmpty()) { // verifica se o extrato está vazio
+
+                System.out.println("Histórico vazio.");
+                return;
+
+            }
+
+            for (Transacao t : this.historico) { // imprime o extrato pegando os dados na clase Transacao
+
+                System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX EXTRATO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                System.out.println("Nome: " + usuario.getNome());
+                System.out.println("Valor: " + t.getValor());
+                System.out.println("Data: " + t.getData());
+                System.out.println("Descrição: " + t.getDescricao());
+
+            }
 
         }
 
