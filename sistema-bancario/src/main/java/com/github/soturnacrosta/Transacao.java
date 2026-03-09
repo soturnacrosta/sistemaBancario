@@ -8,6 +8,7 @@ public class Transacao {
     protected String descricao;
 
     public Transacao(double valor, Date data, String descricao) { // precisa do construtor para gerar o recibo
+
         this.valor = valor;
         this.data = new Date(); // gera a data ATUAL!!
         this.descricao = descricao;

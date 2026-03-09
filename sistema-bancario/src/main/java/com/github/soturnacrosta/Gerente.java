@@ -3,8 +3,8 @@ import java.util.ArrayList;
 
 public class Gerente {
 
-    // importante perceber que as listas dentro da classe permanecem sempre ativas e quando dentro dos métodos, somem quando os métodos terminam
     static ArrayList <Usuario> usuarios = new ArrayList <> (); 
+    // importante perceber que as listas dentro da classe permanecem sempre ativas e quando dentro dos métodos, somem quando os métodos terminam
     // lista static para que todos os métodos de usuario compartilhem a mesma lista
 
         void abrirConta (Usuario usuarioNovo) {
@@ -47,7 +47,7 @@ public class Gerente {
                     System.out.println("Conta aberta com sucesso!");
                     System.out.println("Nome: " + usuarioNovo.getNome() + ".");
                     System.out.println("CPF: " + usuarioNovo.getCpf());
-                    System.out.println("Conta " + contaNova.getConta());
+                    System.out.println("Conta " + usuarioNovo.getContaBancaria());
 
             }                    
 

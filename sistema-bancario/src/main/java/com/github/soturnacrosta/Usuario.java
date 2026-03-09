@@ -5,11 +5,13 @@ public class Usuario {
     private ContaBancaria contaBancaria;
     private String senha, nome, cpf;
 
-            public Usuario(ContaBancaria contaBancaria, String senha, String nome, String cpf) {
+        public Usuario(ContaBancaria contaBancaria, String senha, String nome, String cpf) {
+            
             this.contaBancaria = contaBancaria;
             this.senha = senha;
             this.nome = nome;
             this.cpf = cpf;
+
         }
 
         public ContaBancaria getContaBancaria() {

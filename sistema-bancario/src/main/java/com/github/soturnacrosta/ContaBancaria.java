@@ -6,12 +6,12 @@ public class ContaBancaria {
     private Operacoes operacoes;
     private String agencia, conta, numero;
     protected double saldo;
-    private static int contadorContas = 1000; //contador de numero da conta do cliente
+    static int contadorContas = 1000; //contador de numero da conta do cliente
     private ArrayList <Transacao> historico = new ArrayList <> (); // para gerar o histórico de transações
     static ArrayList <ContaBancaria> contasAbertas = new ArrayList<>(); // todas as classes compartilham do mesmo banco da lista
     private Usuario usuario;
 
-        public ContaBancaria () {
+        public ContaBancaria() {
 
             contadorContas++; // Incrementa cada vez que uma nova conta é criada
             this.numero = String.valueOf(contadorContas);
@@ -90,7 +90,7 @@ public class ContaBancaria {
 
                     saldo = saldo - valor;
 
-                    Transacao transacao = new Transacao( (valor), null, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
+                    Transacao transacao = new Transacao((valor), null, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
                     historico.add(transacao); // adicione a lista global
                     
                     System.out.println("Transação efetuada com sucesso!");
@@ -127,11 +127,14 @@ public class ContaBancaria {
 
             for (Transacao t : this.historico) { // imprime o extrato pegando os dados na clase Transacao
 
+                Usuario usuario = new Usuario(null, numero, conta, agencia); //instancia usuario para imprimir os valores no extrato
+                                
                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX EXTRATO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
                 System.out.println("Nome: " + usuario.getNome());
                 System.out.println("Valor: " + t.getValor());
                 System.out.println("Data: " + t.getData());
                 System.out.println("Descrição: " + t.getDescricao());
+                System.out.println();
 
             }
 
@@ -148,11 +151,11 @@ public class ContaBancaria {
         }
 
         public String getConta() {
-            return conta;
+            return numero;
         }
 
         public void setConta(String conta) {
-            this.conta = conta;
+            this.numero = numero;
         }
 
         public double getSaldo() {
@@ -189,5 +192,9 @@ public class ContaBancaria {
         public String getNumero() {
             return numero;
         }
-        
+
+        @Override
+        public String toString() {
+            return this.numero; // Ou o nome da variável onde você guardou o contador
+        }       
 }
