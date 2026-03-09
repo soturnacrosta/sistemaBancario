@@ -3,9 +3,9 @@ import java.util.ArrayList;
 
 public class Gerente {
 
-    ArrayList <ContaBancaria> contas = new ArrayList<>(); // importante perceber que as listas dentro da classe permanecem sempre ativas e quando
-    ArrayList <Usuario> usuarios = new ArrayList <> (); // dentro dos métodos, somem quando os métodos terminam
-    private Usuario usuario;
+    // importante perceber que as listas dentro da classe permanecem sempre ativas e quando dentro dos métodos, somem quando os métodos terminam
+    static ArrayList <Usuario> usuarios = new ArrayList <> (); 
+    // lista static para que todos os métodos de usuario compartilhem a mesma lista
 
         void abrirConta (Usuario usuarioNovo) {
 
@@ -41,11 +41,13 @@ public class Gerente {
 
                 // salva na lista
                 usuarios.add(usuarioNovo);
-                contas.add(contaNova);
+                ContaBancaria.contasAbertas.add(contaNova);
 
                     System.out.println("Parabéns!");
                     System.out.println("Conta aberta com sucesso!");
                     System.out.println("Nome: " + usuarioNovo.getNome() + ".");
+                    System.out.println("CPF: " + usuarioNovo.getCpf());
+                    System.out.println("Conta " + contaNova.getConta());
 
             }                    
 
@@ -53,13 +55,13 @@ public class Gerente {
 
         void fecharConta (String cpfDeletar) {
 
-            boolean existe = false;
+            Usuario usuarioEncontrado = null;
 
             for (Usuario u : usuarios) {
 
                 if (u.getCpf().equals(cpfDeletar)) {
 
-                    existe = true;
+                    usuarioEncontrado = u;
 
                     break;
 
@@ -67,11 +69,19 @@ public class Gerente {
 
             }
 
-            if (existe) {
+            if (usuarioEncontrado != null) {
 
-                // se existir um usuario com o CPF
-                usuarios.remove(cpfDeletar); // remove da lista
-                System.out.println("Sucesso! Conta encerrada!");
+                if (usuarioEncontrado.getContaBancaria().getSaldo() == 0) { // verifica se o saldo é 0
+
+                    ContaBancaria.contasAbertas.remove(usuarioEncontrado.getContaBancaria());
+                    usuarios.remove(usuarioEncontrado);
+
+                    System.out.println("Conta e dados de " + usuarioEncontrado.getNome() + " excluídos com sucesso.");
+
+                }
+
+               System.out.println("Erro: A conta possui saldo. Zere o saldo antes de encerrar.");
+               System.out.println();
 
             }
 

@@ -8,7 +8,7 @@ public class ContaBancaria {
     protected double saldo;
     private static int contadorContas = 1000; //contador de numero da conta do cliente
     private ArrayList <Transacao> historico = new ArrayList <> (); // para gerar o histórico de transações
-    static ArrayList <ContaBancaria> contasAbertas = new ArrayList<>();
+    static ArrayList <ContaBancaria> contasAbertas = new ArrayList<>(); // todas as classes compartilham do mesmo banco da lista
     private Usuario usuario;
 
         public ContaBancaria () {
@@ -17,6 +17,7 @@ public class ContaBancaria {
             this.numero = String.valueOf(contadorContas);
 
         }
+        
         double sacar (double valor) {
 
             if (valor <= saldo) { // verifica se o saque não excede o saldo da conta

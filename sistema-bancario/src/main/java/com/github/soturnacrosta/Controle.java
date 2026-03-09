@@ -212,11 +212,14 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
             System.out.println("Digite uma senha:");
                 String abrirSenha = input.nextLine();
-
+            
             ContaBancaria novaConta = new ContaBancaria();
-            Usuario usuario = new Usuario (contaBancaria, abrirSenha, abrirNome, abrirCPF);           
+            Usuario usuario = new Usuario (contaBancaria, abrirSenha, abrirNome, abrirCPF);    
             ContaBancaria.contasAbertas.add(novaConta);
             
+            Gerente gerente = new Gerente();
+            gerente.abrirConta(usuario);
+
         } 
 
         void gerenteFecharConta () {
