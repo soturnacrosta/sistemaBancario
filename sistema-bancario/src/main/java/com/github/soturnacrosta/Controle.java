@@ -214,7 +214,6 @@ public class Controle { // responsável pelos menus de contato ao usuário
                 String abrirSenha = input.nextLine();
             
             ContaBancaria novaConta = new ContaBancaria();
-
             Gerente gerente = new Gerente();
 
             Usuario usuario = new Usuario (novaConta, abrirSenha, abrirNome, abrirCPF);               

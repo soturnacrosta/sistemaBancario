@@ -90,7 +90,7 @@ public class ContaBancaria {
 
                     saldo = saldo - valor;
 
-                    Transacao transacao = new Transacao((valor), null, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
+                    Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
                     historico.add(transacao); // adicione a lista global
                     
                     System.out.println("Transação efetuada com sucesso!");
@@ -130,7 +130,7 @@ public class ContaBancaria {
                 Usuario usuario = new Usuario(null, numero, conta, agencia); //instancia usuario para imprimir os valores no extrato
                                 
                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX EXTRATO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
-                System.out.println("Nome: " + usuario.getNome());
+                System.out.println("Destinatário: " + t.getContaDestino());
                 System.out.println("Valor: " + t.getValor());
                 System.out.println("Data: " + t.getData());
                 System.out.println("Descrição: " + t.getDescricao());

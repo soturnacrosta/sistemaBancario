@@ -6,12 +6,15 @@ public class Transacao {
     protected double valor;
     protected Date data;
     protected String descricao;
+    private String contaDestino;
 
-    public Transacao(double valor, Date data, String descricao) { // precisa do construtor para gerar o recibo
-
+    public Transacao(double valor, String contaDestino, String descricao) { // precisa do construtor para gerar o recibo
+        // não precisa passar DATE como parâmetro!!!
         this.valor = valor;
-        this.data = new Date(); // gera a data ATUAL!!
+        this.contaDestino = contaDestino;
         this.descricao = descricao;
+        this.data = new Date(); // gera a data ATUAL!!
+
     }
 
     // getters e setters para que a classe Conta Bancaria consiga ler, respeitando o projeto
@@ -25,6 +28,10 @@ public class Transacao {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public String getContaDestino() {
+        return contaDestino;
     }
     
 }

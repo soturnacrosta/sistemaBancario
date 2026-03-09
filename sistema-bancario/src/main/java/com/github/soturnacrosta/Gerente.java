@@ -42,6 +42,9 @@ public class Gerente {
                 // salva na lista
                 usuarios.add(usuarioNovo);
                 ContaBancaria.contasAbertas.add(contaNova);
+                // delegue a criação da conta apenas para o gerente. não crie duplicidades
+
+                contaNova.setSaldo(0); // o saldo da conta nova se inicia com zero 
 
                     System.out.println("Parabéns!");
                     System.out.println("Conta aberta com sucesso!");
@@ -80,8 +83,12 @@ public class Gerente {
 
                 }
 
-               System.out.println("Erro: A conta possui saldo. Zere o saldo antes de encerrar.");
-               System.out.println();
+                else {
+
+                    System.out.println("Erro: A conta possui saldo. Zere o saldo antes de encerrar.");
+                    System.out.println();
+
+                }
 
             }
 
