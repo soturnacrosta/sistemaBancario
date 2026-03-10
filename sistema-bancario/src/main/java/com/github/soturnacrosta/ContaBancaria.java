@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 public class ContaBancaria {
     
-    private Operacoes operacoes;
     private String agencia, conta, numero;
     protected double saldo;
     static int contadorContas = 1000; //contador de numero da conta do cliente
@@ -22,21 +21,36 @@ public class ContaBancaria {
 
             if (valor <= saldo) { // verifica se o saque não excede o saldo da conta
 
-                
-                saldo = saldo - valor;
+                if (valor > 0) {
 
-                System.out.println("Saque efetuado com sucesso!");
-                System.out.println("Saque: " + valor + "R$.");
-                System.out.println("Novo saldo: " + saldo + ".");
+                    saldo = saldo - valor;
 
-                return saldo;
+                    System.out.println();
+                    System.out.println("Saque efetuado com sucesso!");
+                    System.out.println("Saque: " + valor + "R$.");
+                    System.out.println("Novo saldo: " + saldo + ".");
+                    System.out.println();
 
+                    return saldo;
+
+                }
+
+                else {
+
+                    System.out.println();
+                    System.out.println("Erro! Digite um valor maior que zero!");
+                    System.out.println();
+
+                }
+               
             }
 
             else {
 
+                System.out.println();
                 System.out.println("Erro! Não há saldo suficiente na conta.");
                 System.out.println("Saldo disponível: " + saldo + ".");
+                System.out.println();
                
             }
 
@@ -50,9 +64,11 @@ public class ContaBancaria {
 
                 saldo = saldo + valor;
 
+                System.out.println();
                 System.out.println("Depósito efetuado com sucesso!");
                 System.out.println("Depósito: " + valor + "R$.");
                 System.out.println("Novo saldo: " + saldo + ".");
+                System.out.println();
 
                 return saldo;
 
@@ -60,8 +76,10 @@ public class ContaBancaria {
 
             else {
 
-                System.out.println("Erro! Não há saldo suficiente na conta.");
+                System.out.println();
+                System.out.println("Erro! Digite números válidos!");
                 System.out.println("Saldo disponível: " + saldo + ".");
+                System.out.println();
 
             }
            
@@ -93,16 +111,20 @@ public class ContaBancaria {
                     Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
                     historico.add(transacao); // adicione a lista global
                     
+                    System.out.println();
                     System.out.println("Transação efetuada com sucesso!");
                     System.out.println("TED no valor de: " + valor + "R$.");
                     System.out.println("Novo saldo: " + saldo + ".");
+                    System.out.println();
 
                 }
 
                 else { // caso nao encontrada
 
+                    System.out.println();
                     System.out.println("Erro! Não há saldo suficiente na conta.");
                     System.out.println("Saldo disponível: " + saldo + ".");
+                    System.out.println();
 
                 }
 
@@ -110,7 +132,9 @@ public class ContaBancaria {
 
             else {
 
+                System.out.println();
                 System.out.println("Erro! Conta " + contaDestino + " não encontrada!");
+                System.out.println();
 
             }
 
@@ -120,15 +144,16 @@ public class ContaBancaria {
 
             if (this.historico.isEmpty()) { // verifica se o extrato está vazio
 
+                System.out.println();
                 System.out.println("Histórico vazio.");
+                System.out.println();
                 return;
 
             }
 
             for (Transacao t : this.historico) { // imprime o extrato pegando os dados na clase Transacao
-
-                Usuario usuario = new Usuario(null, numero, conta, agencia); //instancia usuario para imprimir os valores no extrato
-                                
+                
+                System.out.println();
                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX EXTRATO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
                 System.out.println("Destinatário: " + t.getContaDestino());
                 System.out.println("Valor: " + t.getValor());
@@ -164,14 +189,6 @@ public class ContaBancaria {
 
         public void setSaldo(double saldo) {
             this.saldo = saldo;
-        }
-
-        public Operacoes getOperacoes() {
-            return operacoes;
-        }
-
-        public void setOperacoes(Operacoes operacoes) {
-            this.operacoes = operacoes;
         }
 
         public ArrayList<Transacao> getHistorico() {

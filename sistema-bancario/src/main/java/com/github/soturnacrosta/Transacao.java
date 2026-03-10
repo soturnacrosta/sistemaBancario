@@ -3,9 +3,9 @@ import java.util.Date;
 
 public class Transacao {
 
-    protected double valor;
-    protected Date data;
-    protected String descricao;
+    private double valor;
+    private Date data;
+    private String descricao;
     private String contaDestino;
 
     public Transacao(double valor, String contaDestino, String descricao) { // precisa do construtor para gerar o recibo

@@ -26,9 +26,11 @@ public class Gerente {
 
             if (existe) { // compara o cpf que estou passando com o um cpf existente na lista!
 
+                System.out.println();
                 System.out.println("Conta já aberta!");
                 System.out.println("Uma conta corresponde ao CPF do usuário já foi encontrada no nosso banco de dados.");
-           
+                System.out.println();
+
             }
 
             else {
@@ -46,11 +48,13 @@ public class Gerente {
 
                 contaNova.setSaldo(0); // o saldo da conta nova se inicia com zero 
 
+                    System.out.println();
                     System.out.println("Parabéns!");
                     System.out.println("Conta aberta com sucesso!");
                     System.out.println("Nome: " + usuarioNovo.getNome() + ".");
                     System.out.println("CPF: " + usuarioNovo.getCpf());
                     System.out.println("Conta " + usuarioNovo.getContaBancaria());
+                    System.out.println();
 
             }                    
 
@@ -79,12 +83,16 @@ public class Gerente {
                     ContaBancaria.contasAbertas.remove(usuarioEncontrado.getContaBancaria());
                     usuarios.remove(usuarioEncontrado);
 
+                    System.out.println();
                     System.out.println("Conta e dados de " + usuarioEncontrado.getNome() + " excluídos com sucesso.");
+                    System.out.println();
+                    System.out.println();
 
                 }
 
                 else {
 
+                    System.out.println();
                     System.out.println("Erro: A conta possui saldo. Zere o saldo antes de encerrar.");
                     System.out.println();
 
@@ -94,8 +102,10 @@ public class Gerente {
 
             else { // se não houver cadastro, não há conta para fechar
 
+                System.out.println();
                 System.out.println("Erro! Não existe cadastro para este CPF!");
-
+                System.out.println();
+                
             }
  
         }

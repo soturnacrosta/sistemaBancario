@@ -7,6 +7,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
     private boolean condicao = false;
     ContaBancaria contaBancaria;
     Scanner input = new Scanner (System.in);
+    Gerente gerente = new Gerente();    
 
         void painelControle () {
 
@@ -19,14 +20,17 @@ public class Controle { // responsável pelos menus de contato ao usuário
                 System.out.println("2. Login gerente.");
                 System.out.println("0. Sair.");
                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-                escolha = input.nextLine();
+                escolha = input.nextLine(); 
+
+                System.out.println();
 
                 switch (escolha) {
     
                     case "1": //login usuário
 
-                        contaBancaria = new ContaBancaria();
                         boolean menuUsuario = false;
+
+                        contaBancaria = new ContaBancaria(); // evita a conta como NULL
 
                         while (!menuUsuario) {
 
@@ -38,8 +42,9 @@ public class Controle { // responsável pelos menus de contato ao usuário
                             System.out.println("4. Ver saldo na conta.");
                             System.out.println("5. Tirar extrato");
                             System.out.println("0. Sair.");
-                            System.out.println();
                                 String escolhaUsuario = input.nextLine();
+
+                            System.out.println();
 
                                 switch (escolhaUsuario) {
 
@@ -75,9 +80,10 @@ public class Controle { // responsável pelos menus de contato ao usuário
     
                                     default:
 
+                                        System.out.println("Erro! Dígito inválido!");
                                         break;
 
-                                 }
+                                }
 
                         }
 
@@ -101,7 +107,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                                     case "1": // abrir uma conta
                                         
-                                    gerenteAbrirConta();
+                                        gerenteAbrirConta();
                                         break;
                                 
                                     case "2": // encerrar uma conta
@@ -116,7 +122,9 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                                     default:
 
+                                        System.out.println("Erro! Dígito inválido!");
                                         break;
+
                                 }
 
                         }
@@ -155,6 +163,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("Saldo: " + contaBancaria.getSaldo() +"R$.");
             System.out.println("Digito o valor:");
                 double saque = input.nextDouble();
+                input.nextLine(); // limpa o buffer para evitar duplicação de submenus
 
             contaBancaria.sacar(saque); // chama o método de saque em ContaBancária
 
@@ -167,6 +176,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("Saldo: " + contaBancaria.getSaldo() +"R$.");
             System.out.println("Digito o valor:");
                 double deposito = input.nextDouble();
+                input.nextLine(); // limpa o buffer para evitar duplicação de submenus
 
             contaBancaria.depositar(deposito); // chama o método de depósito em ContaBancária
 
@@ -193,6 +203,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
         void usuarioSaldo () {
 
+            System.out.println();
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX DEPÓSITO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("Saldo: " + contaBancaria.getSaldo() +"R$.");
@@ -213,11 +224,11 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("Digite uma senha:");
                 String abrirSenha = input.nextLine();
             
-            ContaBancaria novaConta = new ContaBancaria();
-            Gerente gerente = new Gerente();
+            ContaBancaria novaConta = new ContaBancaria(); // instancia uma nova conta para o usuario
+             // instancia um novo gerente para administrar
 
-            Usuario usuario = new Usuario (novaConta, abrirSenha, abrirNome, abrirCPF);               
-            gerente.abrirConta(usuario);
+            Usuario usuario = new Usuario (novaConta, abrirSenha, abrirNome, abrirCPF);   // instancia um novo usuario com os dados passados            
+            gerente.abrirConta(usuario); // chama o método em Gerente
 
         } 
 
@@ -228,7 +239,6 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("Digite o CPF do cliente para encerrar conta:");
                 String encerrarConta = input.nextLine();
 
-            Gerente gerente = new Gerente(); //instancia o gerente
             gerente.fecharConta(encerrarConta); //fecha a conta com o cpf utilizado da entrada do usuario conforme a classe Gerente
 
         }
