@@ -1,5 +1,6 @@
 package com.github.soturnacrosta;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Gerente {
 
@@ -78,16 +79,33 @@ public class Gerente {
 
             if (usuarioEncontrado != null) {
 
-                if (usuarioEncontrado.getContaBancaria().getSaldo() == 0) { // verifica se o saldo é 0
+                if (usuarioEncontrado.getContaBancaria().getSaldo() == 0) { // verifica se o saldo é 
+                    
+                    Scanner input = new Scanner (System.in);
 
-                    ContaBancaria.contasAbertas.remove(usuarioEncontrado.getContaBancaria());
-                    usuarios.remove(usuarioEncontrado);
+                    System.out.println("Digite a senha:");
+                        String senha = input.nextLine();
 
-                    System.out.println();
-                    System.out.println("Conta e dados de " + usuarioEncontrado.getNome() + " excluídos com sucesso.");
-                    System.out.println();
-                    System.out.println();
+                        if (senha.equals(usuarioEncontrado.getSenha())) {
 
+                             ContaBancaria.contasAbertas.remove(usuarioEncontrado.getContaBancaria());
+                            usuarios.remove(usuarioEncontrado);
+
+                            System.out.println();
+                            System.out.println("Conta e dados de " + usuarioEncontrado.getNome() + " excluídos com sucesso.");
+                            System.out.println();
+                            System.out.println();
+
+                        }
+
+                        else {
+
+                            System.out.println();
+                            System.out.println("Ops! Senha incorreta. Tente novamente.");
+                            System.out.println();
+
+                        }
+                        
                 }
 
                 else {
@@ -105,9 +123,55 @@ public class Gerente {
                 System.out.println();
                 System.out.println("Erro! Não existe cadastro para este CPF!");
                 System.out.println();
-                
+
             }
  
+        }
+
+        void alterarUsuario (String usuarioAlt) {
+
+             Usuario usuarioEncontrado = null;
+
+            for (Usuario u : usuarios) {
+
+                if (u.getCpf().equals(usuarioAlt)) {
+
+                    usuarioEncontrado = u;
+
+                    break;
+
+                }
+
+            }
+
+            if (usuarioEncontrado != null) {
+
+                Scanner input = new Scanner (System.in);
+                
+                System.out.println("Digite o novo nome:");
+                    String novoNome = input.nextLine();
+                
+                System.out.println("Digite a nova senha:");
+                    String novaSenha = input.nextLine();
+
+                usuarioEncontrado.setNome(novoNome); //altere os dados do objeto que foi pesquisado. não instancie um novo objeto vazio!!!
+                usuarioEncontrado.setSenha(novaSenha);
+
+                System.out.println();
+                System.out.println("Conta atualizada com sucesso!");
+                System.out.println("Novo nome: " + usuarioEncontrado.getNome());
+                System.out.println();
+
+            }
+
+            else {
+
+                System.out.println();
+                System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
+                System.out.println();
+
+            }
+
         }
 
 }

@@ -35,17 +35,17 @@ public class ContaBancaria {
 
                 }
 
-                else {
+                else { //digito errado
 
                     System.out.println();
-                    System.out.println("Erro! Digite um valor maior que zero!");
+                    System.out.println("Erro! Digite apenas números válidos (maiores que 0).");
                     System.out.println();
 
                 }
                
             }
 
-            else {
+            else { // sem saldo
 
                 System.out.println();
                 System.out.println("Erro! Não há saldo suficiente na conta.");
@@ -74,10 +74,10 @@ public class ContaBancaria {
 
             }
 
-            else {
+            else { //digito errado
 
                 System.out.println();
-                System.out.println("Erro! Digite números válidos!");
+                System.out.println("Erro! Digite apenas números válidos (maiores que 0).");
                 System.out.println("Saldo disponível: " + saldo + ".");
                 System.out.println();
 
@@ -106,20 +106,32 @@ public class ContaBancaria {
 
                 if (valor <= saldo) { // verifica se há saldo para transação
 
-                    saldo = saldo - valor;
+                    if (valor > 0) { //verifica se é um digito válido
 
-                    Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
-                    historico.add(transacao); // adicione a lista global
-                    
-                    System.out.println();
-                    System.out.println("Transação efetuada com sucesso!");
-                    System.out.println("TED no valor de: " + valor + "R$.");
-                    System.out.println("Novo saldo: " + saldo + ".");
-                    System.out.println();
+                        saldo = saldo - valor;
+
+                        Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
+                        historico.add(transacao); // adicione a lista global
+                        
+                        System.out.println();
+                        System.out.println("Transação efetuada com sucesso!");
+                        System.out.println("TED no valor de: " + valor + "R$.");
+                        System.out.println("Novo saldo: " + saldo + ".");
+                        System.out.println();
+
+                    }
+
+                    else { // digito errado
+
+                        System.out.println();
+                        System.out.println("Erro! Digite apenas números válidos (maiores que 0).");
+                        System.out.println();
+
+                    }
 
                 }
 
-                else { // caso nao encontrada
+                else { // sem saldo
 
                     System.out.println();
                     System.out.println("Erro! Não há saldo suficiente na conta.");
@@ -130,7 +142,7 @@ public class ContaBancaria {
 
             }
 
-            else {
+            else { // caso nao encontrada
 
                 System.out.println();
                 System.out.println("Erro! Conta " + contaDestino + " não encontrada!");

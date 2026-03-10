@@ -93,44 +93,70 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                         boolean menuGerente = false;
 
-                        while (!menuGerente) {
+                        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                        System.out.println("Digite o CPF da sua conta:");
+                            String contaGerente = input.nextLine();
 
-                            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
-                            System.out.println("Escolha uma opção:");
-                            System.out.println("1. Abrir uma conta."); // pode ser tipo gerente ou normal
-                            System.out.println("2. Encerrar uma conta.");
-                            System.out.println("0. Sair.");
-                            System.out.println();
-                                String escolhaGerente = input.nextLine();
+                        System.out.println("Digite sua senha:");
+                            String senhaGerente = input.nextLine();
 
-                                switch (escolhaGerente) {
+                        System.out.println();
 
-                                    case "1": // abrir uma conta
-                                        
-                                        gerenteAbrirConta();
-                                        break;
-                                
-                                    case "2": // encerrar uma conta
+                            if (contaGerente.equals("1234") && (senhaGerente.equals("admin"))) {
 
-                                        gerenteFecharConta();
-                                        break;
+                                while (!menuGerente) {
 
-                                    case "0": // sair 
+                                System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                                System.out.println("Escolha uma opção:");
+                                System.out.println("1. Abrir uma conta."); // pode ser tipo gerente ou normal
+                                System.out.println("2. Encerrar uma conta.");
+                                System.out.println("3. Alterar dados de uma conta.");
+                                System.out.println("0. Sair.");
+                                System.out.println();
+                                    String escolhaGerente = input.nextLine();
 
-                                        menuGerente = true;
-                                        break;
+                                    switch (escolhaGerente) {
 
-                                    default:
+                                        case "1": // abrir uma conta
+                                            
+                                            gerenteAbrirConta();
+                                            break;
+                                    
+                                        case "2": // encerrar uma conta
 
-                                        System.out.println("Erro! Dígito inválido!");
-                                        break;
+                                            gerenteFecharConta();
+                                            break;
+
+                                        case "3":
+
+                                            gerenteAlterarConta();
+                                            break;
+
+                                        case "0": // sair 
+
+                                            menuGerente = true;
+                                            break;
+
+                                        default:
+
+                                            System.out.println("Erro! Dígito inválido!");
+                                            break;
+
+                                    }
 
                                 }
+        
+                             }
 
-                        }
+                            else {
 
-                        break;
+                                System.out.println();
+                                System.out.println("Erro! CPF Ou senha incorreta. Tente novamente");
+                                System.out.println();
+                                
+                            }
 
+                    break;
                 
                     case "0": // sair
 
@@ -224,6 +250,8 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("Digite uma senha:");
                 String abrirSenha = input.nextLine();
             
+            System.out.println();
+
             ContaBancaria novaConta = new ContaBancaria(); // instancia uma nova conta para o usuario
              // instancia um novo gerente para administrar
 
@@ -242,5 +270,17 @@ public class Controle { // responsável pelos menus de contato ao usuário
             gerente.fecharConta(encerrarConta); //fecha a conta com o cpf utilizado da entrada do usuario conforme a classe Gerente
 
         }
+
+        void gerenteAlterarConta () {
+
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX ALTERAR CONTA XXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("Digite o CPF do cliente para alterar dados da conta:");
+                String alterarUsuario = input.nextLine();
+
+            gerente.alterarUsuario(alterarUsuario);
+
+        }
+
 }
 
