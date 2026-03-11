@@ -1,6 +1,6 @@
 package com.github.soturnacrosta;
 
-public class Usuario {
+public class Usuario { // responsável por conter os dados do usuário
 
     private ContaBancaria contaBancaria;
     private String senha, nome, cpf;

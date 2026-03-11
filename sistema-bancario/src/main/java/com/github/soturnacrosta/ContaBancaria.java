@@ -1,8 +1,10 @@
 package com.github.soturnacrosta;
 import java.util.ArrayList;
+import java.util.Scanner;
 
-public class ContaBancaria {
-    
+public class ContaBancaria { // cérebro do sistema. 
+
+    Scanner input = new Scanner (System.in);
     private String agencia, conta, numero;
     protected double saldo;
     static int contadorContas = 1000; //contador de numero da conta do cliente
@@ -23,15 +25,43 @@ public class ContaBancaria {
 
                 if (valor > 0) {
 
-                    saldo = saldo - valor;
+                    System.out.println("Digite a senha:");
+                        String senhaSaque = input.nextLine();
 
-                    System.out.println();
-                    System.out.println("Saque efetuado com sucesso!");
-                    System.out.println("Saque: " + valor + "R$.");
-                    System.out.println("Novo saldo: " + saldo + ".");
-                    System.out.println();
+                    Usuario usuarioAutenticado = null;
 
-                    return saldo;
+                    for (Usuario u : Gerente.usuarios) { // verifica se a senha é válida 
+
+                        if (u.getSenha().equals(senhaSaque)) {
+
+                            usuarioAutenticado = u;
+                            break;
+
+                        }
+
+                    }
+
+                    if (usuarioAutenticado != null) {
+
+                        saldo = saldo - valor;
+
+                        System.out.println();
+                        System.out.println("Saque efetuado com sucesso!");
+                        System.out.println("Saque: " + valor + "R$.");
+                        System.out.println("Novo saldo: " + saldo + ".");
+                        System.out.println();
+
+                        return saldo;
+
+                    }
+
+                    else {
+
+                        System.out.println();
+                        System.out.println("Ops! Senha incorreta. Tente novamente.");
+                        System.out.println();
+
+                    }             
 
                 }
 
@@ -108,16 +138,43 @@ public class ContaBancaria {
 
                     if (valor > 0) { //verifica se é um digito válido
 
-                        saldo = saldo - valor;
+                        System.out.println("Digite a senha:");
+                        String senhaTed = input.nextLine();
 
-                        Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
-                        historico.add(transacao); // adicione a lista global
-                        
-                        System.out.println();
-                        System.out.println("Transação efetuada com sucesso!");
-                        System.out.println("TED no valor de: " + valor + "R$.");
-                        System.out.println("Novo saldo: " + saldo + ".");
-                        System.out.println();
+                        Usuario usuarioAutenticado = null;
+
+                        for (Usuario u : Gerente.usuarios) {
+
+                            if (u.getSenha().equals(senhaTed)) {
+
+                                usuarioAutenticado = u;
+
+                            }
+
+                        }
+
+                        if (usuarioAutenticado != null) {
+
+                            saldo = saldo - valor;
+
+                            Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
+                            historico.add(transacao); // adicione a lista global
+                            
+                            System.out.println();
+                            System.out.println("Transação efetuada com sucesso!");
+                            System.out.println("TED no valor de: " + valor + "R$.");
+                            System.out.println("Novo saldo: " + saldo + ".");
+                            System.out.println();
+
+                        }
+
+                        else {
+
+                            System.out.println();
+                            System.out.println("Ops! Senha incorreta. Tente novamente.");
+                            System.out.println();
+
+                        }
 
                     }
 

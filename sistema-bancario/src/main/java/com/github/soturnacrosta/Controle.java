@@ -32,62 +32,94 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                         contaBancaria = new ContaBancaria(); // evita a conta como NULL
 
-                        while (!menuUsuario) {
+                        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXX USUÁRIO XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                        System.out.println("Digite o CPF da sua conta:");
+                            String loginCliente = input.nextLine();
 
-                            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
-                            System.out.println("Escolha uma opção:");
-                            System.out.println("1. Sacar.");
-                            System.out.println("2. Depositar.");
-                            System.out.println("3. TED.");
-                            System.out.println("4. Ver saldo na conta.");
-                            System.out.println("5. Tirar extrato");
-                            System.out.println("0. Sair.");
-                                String escolhaUsuario = input.nextLine();
+                        System.out.println("Digite sua senha:");
+                            String senhaCliente = input.nextLine();
 
-                            System.out.println();
+                        System.out.println();
 
-                                switch (escolhaUsuario) {
+                        Usuario usuarioAutenticado = null;
 
-                                    case "1": // sacar
+                        for (Usuario u : Gerente.usuarios) { // para comparar a senha passada com a senha de um usuário, precisa percorrer a lista. Isso serve para não criar uma instância do objeto
+                            // Valida CPF e Senha
+                            if (u.getCpf().equals(loginCliente) && u.getSenha().equals(senhaCliente)) {
+                                usuarioAutenticado = u;
+                                break; 
+                            }
+                        }
+
+                        if (usuarioAutenticado != null) {
+
+
+                            while (!menuUsuario) {
+
+                                System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                                System.out.println("Escolha uma opção:");
+                                System.out.println("1. Sacar.");
+                                System.out.println("2. Depositar.");
+                                System.out.println("3. TED.");
+                                System.out.println("4. Ver saldo na conta.");
+                                System.out.println("5. Tirar extrato");
+                                System.out.println("0. Sair.");
+                                    String escolhaUsuario = input.nextLine();
+
+                                System.out.println();
+
+                                    switch (escolhaUsuario) {
+
+                                        case "1": // sacar
+                                            
+                                            usuarioSacar(); // chama a função de saque lá embaixo
+                                            break;
+
+                                        case "2": // depositar
+
+                                            usuarioDepositar(); // chama a função de depósito lá embaixo
+                                            break;
                                         
-                                        usuarioSacar(); // chama a função de saque lá embaixo
-                                        break;
+                                        case "3": // TED
 
-                                    case "2": // depositar
+                                            usuarioTed();
+                                            break;
 
-                                        usuarioDepositar(); // chama a função de depósito lá embaixo
-                                        break;
-                                    
-                                    case "3": // TED
+                                        case "4": // Ver saldo
 
-                                        usuarioTed();
-                                        break;
+                                            usuarioSaldo();
+                                            break;
+                                        
+                                        case "5": // Tirar extrato
 
-                                    case "4": // Ver saldo
+                                            contaBancaria.imprimirExtrato();
+                                            break; 
 
-                                        usuarioSaldo();
-                                        break;
-                                    
-                                    case "5": // Tirar extrato
+                                        case "0": // sair
 
-                                        contaBancaria.imprimirExtrato();
-                                        break; 
+                                            menuUsuario = true;
+                                            break;
+        
+                                        default:
 
-                                    case "0": // sair
+                                            System.out.println("Opção inválida. Tente novamente.");
+                                            break;
 
-                                        menuUsuario = true;
-                                        break;
-    
-                                    default:
+                                    }
+                            
+                            }
 
-                                        System.out.println("Erro! Dígito inválido!");
-                                        break;
+                        } 
+                        
+                        else {
 
-                                }
+                            System.out.println("CPF ou Senha incorretos.");
+                            System.out.println();
 
                         }
 
-                        break;
+                    break;
 
                     case "2": //login gerente
 
@@ -102,8 +134,8 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                         System.out.println();
 
-                            if (contaGerente.equals("1234") && (senhaGerente.equals("admin"))) {
-
+                            if (contaGerente.equals("admin") && (senhaGerente.equals("admin"))) { // acesso do gerente
+ 
                                 while (!menuGerente) {
 
                                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -139,7 +171,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                                         default:
 
-                                            System.out.println("Erro! Dígito inválido!");
+                                            System.out.println("Opção inválida. Tente novamente.");
                                             break;
 
                                     }
@@ -161,7 +193,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                     case "0": // sair
 
                         System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
-                        System.out.println("Saindo...");
+                        System.out.println("Encerrando...");
                         System.out.println();
 
                         condicao = true;

@@ -1,7 +1,7 @@
 package com.github.soturnacrosta;
 import java.util.Date;
 
-public class Transacao {
+public class Transacao { // responsável por registrar os dados das transações. útil para o extrato
 
     private double valor;
     private Date data;
