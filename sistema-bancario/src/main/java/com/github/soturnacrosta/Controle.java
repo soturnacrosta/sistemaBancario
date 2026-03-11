@@ -3,11 +3,13 @@ import java.util.Scanner;
 
 public class Controle { // responsável pelos menus de contato ao usuário
 
+    Usuario usuarioAutenticado = null;
     String escolha; // switches tem que ser public
     private boolean condicao = false;
     ContaBancaria contaBancaria;
     Scanner input = new Scanner (System.in);
     Gerente gerente = new Gerente();    
+    Usuario usuario;
 
         void painelControle () {
 
@@ -42,13 +44,13 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                         System.out.println();
 
-                        Usuario usuarioAutenticado = null;
-
                         for (Usuario u : Gerente.usuarios) { // para comparar a senha passada com a senha de um usuário, precisa percorrer a lista. Isso serve para não criar uma instância do objeto
                             // Valida CPF e Senha
                             if (u.getCpf().equals(loginCliente) && u.getSenha().equals(senhaCliente)) {
+
                                 usuarioAutenticado = u;
                                 break; 
+
                             }
                         }
 
@@ -64,6 +66,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                 System.out.println("3. TED.");
                                 System.out.println("4. Ver saldo na conta.");
                                 System.out.println("5. Tirar extrato");
+                                System.out.println("6. Ver detalhes da conta.");
                                 System.out.println("0. Sair.");
                                     String escolhaUsuario = input.nextLine();
 
@@ -95,6 +98,11 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                                             contaBancaria.imprimirExtrato();
                                             break; 
+
+                                        case "6": // detalhes da conta
+
+                                            usuarioDados();
+                                            break;
 
                                         case "0": // sair
 
@@ -265,6 +273,19 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX DEPÓSITO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("Saldo: " + contaBancaria.getSaldo() +"R$.");
+            System.out.println();
+
+        }
+
+        void usuarioDados () {
+
+            System.out.println();
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX DADOS XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("Nome: " + this.usuarioAutenticado.getNome()); // para acessar um atributo de outra classe sem instanciar novamente, transforme o atributo de login em global e o 
+            System.out.println("CPF: " + this.usuarioAutenticado.getCpf()); // utilize
+            System.out.println("Conta bancária: " + contaBancaria.getConta());
+            System.out.println("Saldo: " + contaBancaria.getSaldo());
             System.out.println();
 
         }

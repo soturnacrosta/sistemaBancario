@@ -10,7 +10,6 @@ public class ContaBancaria { // cérebro do sistema.
     static int contadorContas = 1000; //contador de numero da conta do cliente
     private ArrayList <Transacao> historico = new ArrayList <> (); // para gerar o histórico de transações
     static ArrayList <ContaBancaria> contasAbertas = new ArrayList<>(); // todas as classes compartilham do mesmo banco da lista
-    private Usuario usuario;
 
         public ContaBancaria() {
 
@@ -119,91 +118,104 @@ public class ContaBancaria { // cérebro do sistema.
 
         void realizarTed (double valor, String contaDestino, String descricao) {
 
-            boolean contaEncontrada = false;
+            if (contarTedDiario() >= 5) { // verifica limite diário de transações
 
-            for (ContaBancaria contasBancaria : contasAbertas) {
-
-                if (contaDestino.equals(contasBancaria.getConta())) {  // conta destino já é o numero da conta!
-
-                    contaEncontrada = true;
-                    break;
-
-                }
+                System.out.println();
+                System.out.println("Erro: Limite de 5 transações TED diárias atingido."); 
+                System.out.println();
+                return; // Encerra o método sem realizar a transferência
 
             }
-            
-            if (contaEncontrada) {
 
-                if (valor <= saldo) { // verifica se há saldo para transação
+            else { // se não tiver estourado limite
 
-                    if (valor > 0) { //verifica se é um digito válido
+                boolean contaEncontrada = false;
 
-                        System.out.println("Digite a senha:");
-                        String senhaTed = input.nextLine();
+                for (ContaBancaria contasBancaria : contasAbertas) {
 
-                        Usuario usuarioAutenticado = null;
+                    if (contaDestino.equals(contasBancaria.getConta())) {  // conta destino já é o numero da conta!
 
-                        for (Usuario u : Gerente.usuarios) {
+                        contaEncontrada = true;
+                        break;
 
-                            if (u.getSenha().equals(senhaTed)) {
+                    }
 
-                                usuarioAutenticado = u;
+                }
+                
+                if (contaEncontrada) {
+
+                    if (valor <= saldo) { // verifica se há saldo para transação
+
+                        if (valor > 0) { //verifica se é um digito válido
+
+                            System.out.println("Digite a senha:");
+                            String senhaTed = input.nextLine();
+
+                            Usuario usuarioAutenticado = null;
+
+                            for (Usuario u : Gerente.usuarios) {
+
+                                if (u.getSenha().equals(senhaTed)) {
+
+                                    usuarioAutenticado = u;
+
+                                }
+
+                            }
+
+                            if (usuarioAutenticado != null) {
+
+                                saldo = saldo - valor;
+
+                                Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
+                                historico.add(transacao); // adicione a lista global
+                                
+                                System.out.println();
+                                System.out.println("Transação efetuada com sucesso!");
+                                System.out.println("TED no valor de: " + valor + "R$.");
+                                System.out.println("Novo saldo: " + saldo + ".");
+                                System.out.println();
+
+                            }
+
+                            else {
+
+                                System.out.println();
+                                System.out.println("Ops! Senha incorreta. Tente novamente.");
+                                System.out.println();
 
                             }
 
                         }
 
-                        if (usuarioAutenticado != null) {
-
-                            saldo = saldo - valor;
-
-                            Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
-                            historico.add(transacao); // adicione a lista global
-                            
-                            System.out.println();
-                            System.out.println("Transação efetuada com sucesso!");
-                            System.out.println("TED no valor de: " + valor + "R$.");
-                            System.out.println("Novo saldo: " + saldo + ".");
-                            System.out.println();
-
-                        }
-
-                        else {
+                        else { // digito errado
 
                             System.out.println();
-                            System.out.println("Ops! Senha incorreta. Tente novamente.");
+                            System.out.println("Erro! Digite apenas números válidos (maiores que 0).");
                             System.out.println();
 
                         }
 
                     }
 
-                    else { // digito errado
+                    else { // sem saldo
 
                         System.out.println();
-                        System.out.println("Erro! Digite apenas números válidos (maiores que 0).");
+                        System.out.println("Erro! Não há saldo suficiente na conta.");
+                        System.out.println("Saldo disponível: " + saldo + ".");
                         System.out.println();
 
                     }
 
                 }
 
-                else { // sem saldo
+                else { // caso nao encontrada
 
                     System.out.println();
-                    System.out.println("Erro! Não há saldo suficiente na conta.");
-                    System.out.println("Saldo disponível: " + saldo + ".");
+                    System.out.println("Erro! Conta " + contaDestino + " não encontrada!");
                     System.out.println();
 
                 }
-
-            }
-
-            else { // caso nao encontrada
-
-                System.out.println();
-                System.out.println("Erro! Conta " + contaDestino + " não encontrada!");
-                System.out.println();
 
             }
 
@@ -220,8 +232,12 @@ public class ContaBancaria { // cérebro do sistema.
 
             }
 
-            for (Transacao t : this.historico) { // imprime o extrato pegando os dados na clase Transacao
+            int contador = 0;
+
+            for (int i = historico.size() -1; i>= 0 && contador < 10; i --){ // define o teto como 10
                 
+                Transacao t = historico.get(i); // imprime o extrato pegando os dados na clase Transacao
+
                 System.out.println();
                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX EXTRATO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
                 System.out.println("Destinatário: " + t.getContaDestino());
@@ -230,7 +246,35 @@ public class ContaBancaria { // cérebro do sistema.
                 System.out.println("Descrição: " + t.getDescricao());
                 System.out.println();
 
+                contador ++; // incrementa para atingir as 10 impressões e parar
+
             }
+
+        }
+
+        private int contarTedDiario() { // função para verificar limite de transações diarias
+
+            int contador = 0;
+            java.util.Date hoje = new java.util.Date();
+            
+            java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("dd/MM/yyyy");  // Formatador para comparar apenas Dia/Mês/Ano, ignorando as horas
+
+            String dataAtual = fmt.format(hoje); // pega a data formatada e guarda numa String
+
+            for (Transacao t : historico) {
+
+                // Comparamos a data da transação salva com a data de agora
+                 if (fmt.format(t.getData()).equals(dataAtual)) {
+
+                        contador++; // Conta todas do dia, independente da descrição
+
+                    }
+
+                }
+
+            
+            
+            return contador;
 
         }
 
