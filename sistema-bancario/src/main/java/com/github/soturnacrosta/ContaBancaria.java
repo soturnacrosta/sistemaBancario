@@ -46,8 +46,8 @@ public class ContaBancaria { // cérebro do sistema.
 
                         System.out.println();
                         System.out.println("Saque efetuado com sucesso!");
-                        System.out.println("Saque: " + valor + "R$.");
-                        System.out.println("Novo saldo: " + saldo + ".");
+                        System.out.println("Saque: " + MoedaUtilizada.formatar(valor) + ".");
+                        System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
                         System.out.println();
 
                         return saldo;
@@ -76,10 +76,7 @@ public class ContaBancaria { // cérebro do sistema.
 
             else { // sem saldo
 
-                System.out.println();
-                System.out.println("Erro! Não há saldo suficiente na conta.");
-                System.out.println("Saldo disponível: " + saldo + ".");
-                System.out.println();
+               throw new SaldoInsuficienteException(this.saldo, valor);
                
             }
 
@@ -95,8 +92,8 @@ public class ContaBancaria { // cérebro do sistema.
 
                 System.out.println();
                 System.out.println("Depósito efetuado com sucesso!");
-                System.out.println("Depósito: " + valor + "R$.");
-                System.out.println("Novo saldo: " + saldo + ".");
+                System.out.println("Depósito: " + MoedaUtilizada.formatar(valor) + "R$.");
+                System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
                 System.out.println();
 
                 return saldo;
@@ -172,8 +169,8 @@ public class ContaBancaria { // cérebro do sistema.
                                 
                                 System.out.println();
                                 System.out.println("Transação efetuada com sucesso!");
-                                System.out.println("TED no valor de: " + valor + "R$.");
-                                System.out.println("Novo saldo: " + saldo + ".");
+                                System.out.println("TED no valor de: " + MoedaUtilizada.formatar(valor) + ".");
+                                System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
                                 System.out.println();
 
                             }
@@ -200,10 +197,8 @@ public class ContaBancaria { // cérebro do sistema.
 
                     else { // sem saldo
 
-                        System.out.println();
-                        System.out.println("Erro! Não há saldo suficiente na conta.");
-                        System.out.println("Saldo disponível: " + saldo + ".");
-                        System.out.println();
+                      
+                        throw new SaldoInsuficienteException(this.saldo, valor);
 
                     }
 
@@ -241,7 +236,7 @@ public class ContaBancaria { // cérebro do sistema.
                 System.out.println();
                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX EXTRATO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
                 System.out.println("Destinatário: " + t.getContaDestino());
-                System.out.println("Valor: " + t.getValor());
+                System.out.println("Valor: " + MoedaUtilizada.formatar(t.getValor()));
                 System.out.println("Data: " + t.getData());
                 System.out.println("Descrição: " + t.getDescricao());
                 System.out.println();
@@ -258,6 +253,7 @@ public class ContaBancaria { // cérebro do sistema.
             java.util.Date hoje = new java.util.Date();
             
             java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("dd/MM/yyyy");  // Formatador para comparar apenas Dia/Mês/Ano, ignorando as horas
+
 
             String dataAtual = fmt.format(hoje); // pega a data formatada e guarda numa String
 
