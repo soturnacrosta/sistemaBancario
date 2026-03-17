@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class ContaBancaria { // cérebro do sistema. 
 
     Scanner input = new Scanner (System.in);
-    private String agencia, conta, numero;
+    private String agencia, numero;
     protected double saldo;
     static int contadorContas = 1000; //contador de numero da conta do cliente
     private ArrayList <Transacao> historico = new ArrayList <> (); // para gerar o histórico de transações
@@ -18,69 +18,27 @@ public class ContaBancaria { // cérebro do sistema.
 
         }
         
-        double sacar (double valor) {
+        double sacar (double valor, String senhaSaque) {
 
-            if (valor <= saldo) { // verifica se o saque não excede o saldo da conta
+            if (valor > saldo || valor <= 0) { // verifica se o saque não excede o saldo da conta      
 
-                if (valor > 0) {
+                throw new SaldoInsuficienteException(this.saldo, valor);  
 
-                    System.out.println("Digite a senha:");
-                        String senhaSaque = input.nextLine();
-
-                    Usuario usuarioAutenticado = null;
-
-                    for (Usuario u : Gerente.usuarios) { // verifica se a senha é válida 
-
-                        if (u.getSenha().equals(senhaSaque)) {
-
-                            usuarioAutenticado = u;
-                            break;
-
-                        }
-
-                    }
-
-                    if (usuarioAutenticado != null) {
-
-                        saldo = saldo - valor;
-
-                        System.out.println();
-                        System.out.println("Saque efetuado com sucesso!");
-                        System.out.println("Saque: " + MoedaUtilizada.formatar(valor) + ".");
-                        System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
-                        System.out.println();
-
-                        return saldo;
-
-                    }
-
-                    else {
-
-                        System.out.println();
-                        System.out.println("Ops! Senha incorreta. Tente novamente.");
-                        System.out.println();
-
-                    }             
-
-                }
-
-                else { //digito errado
-
-                    System.out.println();
-                    System.out.println("Erro! Digite apenas números válidos (maiores que 0).");
-                    System.out.println();
-
-                }
-               
             }
 
             else { // sem saldo
 
-               throw new SaldoInsuficienteException(this.saldo, valor);
+                saldo = saldo - valor;
+
+                System.out.println();
+                System.out.println("Saque efetuado com sucesso!");
+                System.out.println("Saque: " + MoedaUtilizada.formatar(valor) + ".");
+                System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
+                System.out.println();
+
+                return saldo; 
                
             }
-
-            return saldo;
 
         }
 
@@ -126,79 +84,41 @@ public class ContaBancaria { // cérebro do sistema.
 
             else { // se não tiver estourado limite
 
-                boolean contaEncontrada = false;
+                ContaBancaria contaEncontrada = null;
 
-                for (ContaBancaria contasBancaria : contasAbertas) {
+                for (ContaBancaria ce : contasAbertas) { // logica para encontrar uma conta destino
 
-                    if (contaDestino.equals(contasBancaria.getConta())) {  // conta destino já é o numero da conta!
+                    if (contaDestino.equals(ce.getConta())) {  // conta destino já é o numero da conta!
 
-                        contaEncontrada = true;
+                        contaEncontrada = ce;
                         break;
 
                     }
 
                 }
                 
-                if (contaEncontrada) {
+                if (contaEncontrada != null) {
 
-                    if (valor <= saldo) { // verifica se há saldo para transação
+                    if (valor > saldo || valor <= 0) { // verifica se há saldo para transação
 
-                        if (valor > 0) { //verifica se é um digito válido
-
-                            System.out.println("Digite a senha:");
-                            String senhaTed = input.nextLine();
-
-                            Usuario usuarioAutenticado = null;
-
-                            for (Usuario u : Gerente.usuarios) {
-
-                                if (u.getSenha().equals(senhaTed)) {
-
-                                    usuarioAutenticado = u;
-
-                                }
-
-                            }
-
-                            if (usuarioAutenticado != null) {
-
-                                saldo = saldo - valor;
-
-                                Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
-                                historico.add(transacao); // adicione a lista global
-                                
-                                System.out.println();
-                                System.out.println("Transação efetuada com sucesso!");
-                                System.out.println("TED no valor de: " + MoedaUtilizada.formatar(valor) + ".");
-                                System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
-                                System.out.println();
-
-                            }
-
-                            else {
-
-                                System.out.println();
-                                System.out.println("Ops! Senha incorreta. Tente novamente.");
-                                System.out.println();
-
-                            }
-
-                        }
-
-                        else { // digito errado
-
-                            System.out.println();
-                            System.out.println("Erro! Digite apenas números válidos (maiores que 0).");
-                            System.out.println();
-
-                        }
+                        throw new SaldoInsuficienteException(this.saldo, valor);
 
                     }
 
-                    else { // sem saldo
+                    else {                       
 
-                      
-                        throw new SaldoInsuficienteException(this.saldo, valor);
+                        saldo = saldo - valor;  //debita o valor na propria conta
+
+                        contaEncontrada.saldo += valor; // acrescenta o valor na conta destino 
+
+                        Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
+                        historico.add(transacao); // adicione a lista global
+                        
+                        System.out.println();
+                        System.out.println("Transação efetuada com sucesso!");
+                        System.out.println("TED no valor de: " + MoedaUtilizada.formatar(valor) + ".");
+                        System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
+                        System.out.println();
 
                     }
 

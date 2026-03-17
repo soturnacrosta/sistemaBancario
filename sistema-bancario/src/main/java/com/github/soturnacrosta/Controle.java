@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Controle { // responsável pelos menus de contato ao usuário
 
     Usuario usuarioAutenticado = null;
-    String escolha; // switches tem que ser public
+    private String escolha; // switches tem que ser public
     private boolean condicao = false;
     ContaBancaria contaBancaria;
     Scanner input = new Scanner (System.in);
@@ -33,6 +33,8 @@ public class Controle { // responsável pelos menus de contato ao usuário
                         case "1": //login usuário
 
                             boolean menuUsuario = false;
+
+                            usuarioAutenticado = null; // força o usuário a logar toda vez, resetando a variável autenticado
 
                             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
                             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXX USUÁRIO XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -242,15 +244,26 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX SAQUE XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("Digite a senha:");
+                String senhaSaque = input.nextLine();
+
+            if (!usuarioAutenticado.getSenha().equals(senhaSaque)) {
+
+                System.out.println("\nErro: Senha incorreta. Operação cancelada.\n");
+
+                return; // O 'return' encerra esse método na hora e volta pro menu principal
+
+            }
+           
             System.out.println("Saldo: R$" + MoedaUtilizada.formatar(contaBancaria.getSaldo()) + ".");
-            System.out.println("Digito o valor:");
 
             try {
 
-                double saque = input.nextDouble();
-                input.nextLine(); // limpa o buffer para evitar duplicação de submenus
+                System.out.println("Digito o valor:");
+                    double saque = input.nextDouble();
+                    input.nextLine(); // limpa o buffer para evitar duplicação de submenus
 
-                contaBancaria.sacar(saque); // chama o método de saque em ContaBancária
+                contaBancaria.sacar(saque, senhaSaque); // chama o método de saque em ContaBancária
 
             }
 
@@ -298,6 +311,17 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX DEPÓSITO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("Digite a senha:");
+                String senhaTed = input.nextLine();
+
+            if (!usuarioAutenticado.getSenha().equals(senhaTed)) {
+
+                System.out.println("\nErro: Senha incorreta. Operação cancelada.\n");
+
+                return; // O 'return' encerra esse método na hora e volta pro menu principal
+
+            }
+
             System.out.println("Saldo: R$" + MoedaUtilizada.formatar(contaBancaria.getSaldo()) + ".");
 
             try {

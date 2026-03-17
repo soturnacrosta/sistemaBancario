@@ -79,7 +79,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
 
             if (usuarioEncontrado != null) {
 
-                if (usuarioEncontrado.getContaBancaria().getSaldo() == 0) { // verifica se o saldo é 
+                if (usuarioEncontrado.getContaBancaria().getSaldo() == 0) { // verifica se o saldo é 0
                     
                     Scanner input = new Scanner (System.in);
 

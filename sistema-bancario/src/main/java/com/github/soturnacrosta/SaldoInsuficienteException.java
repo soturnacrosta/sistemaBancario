@@ -15,7 +15,8 @@ public class SaldoInsuficienteException extends RuntimeException {
 
         return "\nErro! Não há saldo suficiente na conta.\n" +
                "Saldo disponível: R$ " + df.format(saldo) + ".\n" +
-               "Valor tentado: R$ " + df.format(valor) + ".\n";
+               "Valor tentado: R$ " + df.format(valor) + ".\n" +
+               "Verifique os dígitos.\n";
 
     }
 
