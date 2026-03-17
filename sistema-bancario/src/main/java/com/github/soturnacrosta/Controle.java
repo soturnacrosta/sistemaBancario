@@ -372,6 +372,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX DADOS XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("Nome: " + this.usuarioAutenticado.getNome()); // para acessar um atributo de outra classe sem instanciar novamente, transforme o atributo de login em global e o 
             System.out.println("CPF: " + this.usuarioAutenticado.getCpf()); // utilize
+            System.out.println("Agência: " + this.contaBancaria.getAgencia());
             System.out.println("Conta bancária: " + contaBancaria.getConta());
             System.out.println("Saldo: " + MoedaUtilizada.formatar(contaBancaria.getSaldo()));
             System.out.println();

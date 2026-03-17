@@ -187,8 +187,6 @@ public class ContaBancaria { // cérebro do sistema.
                     }
 
                 }
-
-            
             
             return contador;
 

@@ -45,6 +45,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
                 // salva na lista
                 usuarios.add(usuarioNovo);
                 ContaBancaria.contasAbertas.add(contaNova);
+                contaNova.setAgencia("0001-9"); // seta a criação da agencia na hora da abertura
                 // delegue a criação da conta apenas para o gerente. não crie duplicidades
 
                 contaNova.setSaldo(0); // o saldo da conta nova se inicia com zero 
@@ -54,6 +55,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
                     System.out.println("Conta aberta com sucesso!");
                     System.out.println("Nome: " + usuarioNovo.getNome() + ".");
                     System.out.println("CPF: " + usuarioNovo.getCpf());
+                    System.out.println(("Agência: " + contaNova.getAgencia()));
                     System.out.println("Conta " + usuarioNovo.getContaBancaria());
                     System.out.println();
 
