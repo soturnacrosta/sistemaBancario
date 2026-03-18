@@ -192,6 +192,22 @@ public class ContaBancaria { // cérebro do sistema.
 
         }
 
+        public static ContaBancaria buscarContaPorNumero(String numeroProcurado) { // conversor String > Conta bancária
+
+            for (ContaBancaria cb : contasAbertas) {
+
+                if (cb.getNumero().equals(numeroProcurado)) {
+
+                    return cb; // Aqui a String "virou" o Objeto da Classe
+
+                }
+
+            }
+
+            return null; // Caso não encontre nenhuma conta com esse número
+
+        }
+
         // getters e setters
 
         public String getAgencia() {

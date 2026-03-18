@@ -1,4 +1,5 @@
 package com.github.soturnacrosta;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -314,29 +315,55 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("Digite a senha:");
                 String senhaTed = input.nextLine();
 
-            if (!usuarioAutenticado.getSenha().equals(senhaTed)) {
+            if (!usuarioAutenticado.getSenha().equals(senhaTed)) { // verifica a senha
 
                 System.out.println("\nErro: Senha incorreta. Operação cancelada.\n");
 
-                return; // O 'return' encerra esse método na hora e volta pro menu principal
-
+                return; 
             }
 
-            System.out.println("Saldo: R$" + MoedaUtilizada.formatar(contaBancaria.getSaldo()) + ".");
+            System.out.println("Saldo: R$" + MoedaUtilizada.formatar(contaBancaria.getSaldo()) + "."); // mostra o saldo
 
             try {
 
-                System.out.println("Digite o número da conta destino: ");
-                    String contaDestino = input.nextLine();
+                System.out.println("Digite o número da conta destino: "); // pede a senha
+                    String numeroDestino = input.nextLine();
 
-                System.out.println("Digito o valor:");
-                    double ted = input.nextDouble();
-                    input.nextLine();
+                    // precisa converter a senha do tipo String para o tipo classe que contem a conta bancária
+                    ContaBancaria contaDestino = ContaBancaria.buscarContaPorNumero(numeroDestino); // converte a string de entrada para objeto de classe
+                    
+                    if (contaDestino != null) { // Se a conta foi encontrada na lista global
+                    
+                        if (!contaDestino.getConta().equals(usuarioAutenticado.getContaBancaria().getConta())) { // compara
 
-                System.out.println("Adicione uma descrição:");  
-                    String descricao = input.nextLine();
+                            System.out.println("Digito o valor:");
+                                double ted = input.nextDouble();
+                                input.nextLine();
 
-                contaBancaria.realizarTed(ted, contaDestino, descricao); // conta destino já é o numero da conta!
+                            System.out.println("Adicione uma descrição:");  
+                                String descricao = input.nextLine();
+
+                            contaBancaria.realizarTed(ted, numeroDestino, descricao); // conta destino já é o numero da conta!
+                            // chama o método
+                        }
+
+                        else {
+
+                            System.out.println();
+                            System.out.println("Erro! A conta de destino não deve ser a conta remetente.");
+                            System.out.println();
+
+                        }
+
+                    }
+
+                    else {
+
+                        System.out.println();
+                        System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
+                        System.out.println();
+
+                    }
 
             }
 
@@ -407,10 +434,50 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX FECHAR CONTA XXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("Digite o CPF do cliente para encerrar conta:");
-                String encerrarConta = input.nextLine();
+            String cpfDeletar = input.nextLine();
 
-            gerente.fecharConta(encerrarConta); //fecha a conta com o cpf utilizado da entrada do usuario conforme a classe Gerente
+            Usuario usuarioEncontrado = null;
+            
+            for (Usuario u : Gerente.usuarios) {
 
+                if (u.getCpf().equals(cpfDeletar)) {
+
+                    usuarioEncontrado = u;
+
+                    break;
+
+                }
+
+            }
+
+            if (usuarioEncontrado != null) {
+
+                System.out.println("Digite a senha:");
+                String senhaFecharConta = input.nextLine();
+
+                    if (usuarioEncontrado.getSenha().equals(senhaFecharConta)) {
+
+                        gerente.fecharConta(cpfDeletar);
+
+                    }
+
+                    else {
+
+                        System.out.println();
+                        System.out.println("Ops! Senha incorreta. Tente novamente.");
+
+                    }
+
+            }
+
+            else { // se não houver cadastro, não há conta para fechar
+
+                System.out.println();
+                System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
+                System.out.println();
+
+            }
+        
         }
 
         void gerenteAlterarConta () {
@@ -418,9 +485,56 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX ALTERAR CONTA XXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("Digite o CPF do cliente para alterar dados da conta:");
-                String alterarUsuario = input.nextLine();
+                String alterarUsuarioCpf = input.nextLine();
 
-            gerente.alterarUsuario(alterarUsuario);
+            Usuario usuarioEncontrado = null;
+
+            for (Usuario u : Gerente.usuarios) {
+
+                if (u.getCpf().equals(alterarUsuarioCpf)) {
+
+                    usuarioEncontrado = u;
+
+                    break;
+
+                }
+
+            }
+
+            if (usuarioEncontrado != null) {
+
+                System.out.println("Usuário para CPF " + usuarioEncontrado.getCpf() + " encontrado. Digite a senha antiga do usuário:");
+                String senhaAlt = input.nextLine();
+
+                if (usuarioEncontrado.getSenha().equals(senhaAlt)) {
+
+                    System.out.println("Digite o novo nome:");
+                        String novoNome = input.nextLine();
+                    
+                    System.out.println("Digite a nova senha:");
+                        String novaSenha = input.nextLine();
+
+                    gerente.alterarUsuario(alterarUsuarioCpf, novoNome, novaSenha);
+
+                }
+
+                else {
+
+                    System.out.println();
+                    System.out.println("Ops! Senha incorreta. Tente novamente.");
+                    System.out.println();
+
+                }
+
+            }
+
+            else {
+
+                System.out.println();
+                System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
+                System.out.println();
+
+            }
 
         }
 

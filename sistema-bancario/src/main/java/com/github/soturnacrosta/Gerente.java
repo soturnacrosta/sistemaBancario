@@ -69,7 +69,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
 
             for (Usuario u : usuarios) {
 
-                if (u.getCpf().equals(cpfDeletar)) {
+                if (u.getCpf().equals(cpfDeletar)){
 
                     usuarioEncontrado = u;
 
@@ -81,31 +81,16 @@ public class Gerente { // responsável por administrar as contas e os dados do u
 
             if (usuarioEncontrado != null) {
 
+
                 if (usuarioEncontrado.getContaBancaria().getSaldo() == 0) { // verifica se o saldo é 0
                     
-                    Scanner input = new Scanner (System.in);
+                    ContaBancaria.contasAbertas.remove(usuarioEncontrado.getContaBancaria());
+                    usuarios.remove(usuarioEncontrado);
 
-                    System.out.println("Digite a senha:");
-                        String senha = input.nextLine();
+                    System.out.println();
+                    System.out.println("Conta e dados de " + usuarioEncontrado.getNome() + " excluídos com sucesso.");
+                    System.out.println();
 
-                        if (senha.equals(usuarioEncontrado.getSenha())) {
-
-                             ContaBancaria.contasAbertas.remove(usuarioEncontrado.getContaBancaria());
-                            usuarios.remove(usuarioEncontrado);
-
-                            System.out.println();
-                            System.out.println("Conta e dados de " + usuarioEncontrado.getNome() + " excluídos com sucesso.");
-                            System.out.println();
-
-                        }
-
-                        else {
-
-                            System.out.println();
-                            System.out.println("Ops! Senha incorreta. Tente novamente.");
-                            System.out.println();
-
-                        }
                         
                 }
 
@@ -119,7 +104,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
 
             }
 
-            else { // se não houver cadastro, não há conta para fechar
+            else {
 
                 System.out.println();
                 System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
@@ -129,13 +114,14 @@ public class Gerente { // responsável por administrar as contas e os dados do u
  
         }
 
-        void alterarUsuario (String usuarioAlt) {
+        void alterarUsuario (String usuarioAltCpf, String novoNome, String novaSenha ) {
 
-             Usuario usuarioEncontrado = null;
+             
+            Usuario usuarioEncontrado = null;
 
             for (Usuario u : usuarios) {
 
-                if (u.getCpf().equals(usuarioAlt)) {
+                if (u.getCpf().equals(usuarioAltCpf)) {
 
                     usuarioEncontrado = u;
 
@@ -145,42 +131,19 @@ public class Gerente { // responsável por administrar as contas e os dados do u
 
             }
 
-            if (usuarioEncontrado != null) {
+            if (usuarioEncontrado != null) {        
 
-                Scanner input = new Scanner(System.in);
+                usuarioEncontrado.setNome(novoNome); //altere os dados do objeto que foi pesquisado. não instancie um novo objeto vazio!!!
+                usuarioEncontrado.setSenha(novaSenha);
 
-                System.out.println("Usuário para CPF " + usuarioEncontrado.getCpf() + " encontrado. Digite a senha antiga do usuário:");
-                    String senha = input.nextLine();
-
-                    if (senha.equals(usuarioEncontrado.getSenha())) {
-                        
-                        System.out.println("Digite o novo nome:");
-                            String novoNome = input.nextLine();
-                        
-                        System.out.println("Digite a nova senha:");
-                            String novaSenha = input.nextLine();
-
-                        usuarioEncontrado.setNome(novoNome); //altere os dados do objeto que foi pesquisado. não instancie um novo objeto vazio!!!
-                        usuarioEncontrado.setSenha(novaSenha);
-
-                        System.out.println();
-                        System.out.println("Conta atualizada com sucesso!");
-                        System.out.println("Novo nome: " + usuarioEncontrado.getNome());
-                        System.out.println();
-
-                    }
-
-                    else {
-
-                            System.out.println();
-                            System.out.println("Ops! Senha incorreta. Tente novamente.");
-                            System.out.println();
-
-                    }
+                System.out.println();
+                System.out.println("Conta atualizada com sucesso!");
+                System.out.println("Novo nome: " + usuarioEncontrado.getNome());
+                System.out.println();
 
             }
 
-            else {
+              else {
 
                 System.out.println();
                 System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
