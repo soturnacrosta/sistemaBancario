@@ -1,4 +1,5 @@
 package com.github.soturnacrosta;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -117,6 +118,8 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                             default:
 
                                                 System.out.println("Opção inválida. Tente novamente.");
+                                                System.out.println();
+
                                                 break;
 
                                         }
@@ -185,6 +188,8 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                             default:
 
                                                 System.out.println("Opção inválida. Tente novamente.");
+                                                System.out.println();
+
                                                 break;
 
                                         }
@@ -386,7 +391,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
             System.out.println();
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX DEPÓSITO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX SALDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("Saldo: R$" + MoedaUtilizada.formatar(contaBancaria.getSaldo()) +".");
             System.out.println();
 
@@ -398,7 +403,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX DADOS XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("Nome: " + this.usuarioAutenticado.getNome()); // para acessar um atributo de outra classe sem instanciar novamente, transforme o atributo de login em global e o 
-            System.out.println("CPF: " + this.usuarioAutenticado.getCpf()); // utilize
+            System.out.println("CPF: " + FormatadorCpf.formatarCpf(this.usuarioAutenticado.getCpf())); // utilize
             System.out.println("Agência: " + this.contaBancaria.getAgencia());
             System.out.println("Conta bancária: " + contaBancaria.getConta());
             System.out.println("Saldo: " + MoedaUtilizada.formatar(contaBancaria.getSaldo()));
@@ -410,22 +415,45 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX ABRIR CONTA XXXXXXXXXXXXXXXXXXXXXXXXX");
-            System.out.println("Digite o CPF do cliente para abrir conta:");
-                String abrirCPF = input.nextLine();
-
-            System.out.println("Digite o nome completo:");
-                String abrirNome = input.nextLine();
-
-            System.out.println("Digite uma senha:");
-                String abrirSenha = input.nextLine();
             
-            System.out.println();
+            boolean cpfAceito = false;
+                
+                while (!cpfAceito) {
+                
+                    System.out.println("Digite o CPF do cliente para abrir conta:");
+                        String abrirCPF = input.nextLine();
 
-            ContaBancaria novaConta = new ContaBancaria(); // instancia uma nova conta para o usuario
-             // instancia um novo gerente para administrar
+                    if (FormatadorCpf.isFormatoValido(abrirCPF)) { // barra a formatação do cpf
 
-            Usuario usuario = new Usuario (novaConta, abrirSenha, abrirNome, abrirCPF);   // instancia um novo usuario com os dados passados            
-            gerente.abrirConta(usuario); // chama o método em Gerente
+                        abrirCPF = FormatadorCpf.formatarCpf(abrirCPF); // se tiver 11 digitos, formata a visualização e prossegue
+
+                        System.out.println("Digite o nome completo:");
+                            String abrirNome = input.nextLine();
+
+                        System.out.println("Digite uma senha:");
+                            String abrirSenha = input.nextLine();
+                        
+                        System.out.println();
+
+                        ContaBancaria novaConta = new ContaBancaria(); // instancia uma nova conta para o usuario
+                        // instancia um novo gerente para administrar
+
+                        Usuario usuario = new Usuario (novaConta, abrirSenha, abrirNome, abrirCPF);   // instancia um novo usuario com os dados passados            
+                        gerente.abrirConta(usuario); // chama o método em Gerente
+
+                        cpfAceito = true;
+
+                    }
+
+                    else {
+
+                        System.out.println("\nErro! Formato inválido. O CPF deve conter 11 números.\n");
+
+                        break;
+                    
+                    }
+
+                }
 
         } 
 
@@ -433,67 +461,152 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX FECHAR CONTA XXXXXXXXXXXXXXXXXXXXXXXXX");
-            System.out.println("Digite o CPF do cliente para encerrar conta:");
-            String cpfDeletar = input.nextLine();
-
-            Usuario usuarioEncontrado = null;
             
-            for (Usuario u : Gerente.usuarios) {
+            boolean cpfAceito = false;
 
-                if (u.getCpf().equals(cpfDeletar)) {
+            while (!cpfAceito) {
 
-                    usuarioEncontrado = u;
+                System.out.println("Digite o CPF do cliente para encerrar conta:");
+                String cpfDeletar = input.nextLine();
 
-                    break;
+                if (FormatadorCpf.isFormatoValido(cpfDeletar)) {
+
+                    cpfDeletar = FormatadorCpf.formatarCpf(cpfDeletar); // DEVE Formatar a visualização para encaixar com o cpf da conta aberta
+
+                    Usuario usuarioEncontrado = null;
+                
+                    for (Usuario u : Gerente.usuarios) {
+
+                        if (u.getCpf().equals(cpfDeletar)) {
+
+                            usuarioEncontrado = u;
+
+                            break;
+
+                        }
+
+                    }
+
+                    if (usuarioEncontrado != null) {
+
+                        System.out.println("Digite a senha:");
+                        String senhaFecharConta = input.nextLine();
+
+                            if (usuarioEncontrado.getSenha().equals(senhaFecharConta)) {
+
+                                gerente.fecharConta(cpfDeletar);
+
+                                cpfAceito = true;
+
+                            }
+
+                            else {
+
+                                System.out.println();
+                                System.out.println("Ops! Senha incorreta. Tente novamente.");
+
+                            }
+
+                     }
+
+                    else { // se não houver cadastro, não há conta para fechar
+
+                        System.out.println();
+                        System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
+                        System.out.println();
+
+                    }
+            
 
                 }
 
-            }
+                else {
 
-            if (usuarioEncontrado != null) {
+                    System.out.println("\nErro! Formato inválido. O CPF deve conter 11 números.\n");
 
-                System.out.println("Digite a senha:");
-                String senhaFecharConta = input.nextLine();
-
-                    if (usuarioEncontrado.getSenha().equals(senhaFecharConta)) {
-
-                        gerente.fecharConta(cpfDeletar);
-
-                    }
-
-                    else {
-
-                        System.out.println();
-                        System.out.println("Ops! Senha incorreta. Tente novamente.");
-
-                    }
-
-            }
-
-            else { // se não houver cadastro, não há conta para fechar
-
-                System.out.println();
-                System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
-                System.out.println();
-
-            }
+                    break;
+                
+                }
         
+            }
+           
         }
 
         void gerenteAlterarConta () {
 
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX ALTERAR CONTA XXXXXXXXXXXXXXXXXXXXXXXXX");
-            System.out.println("Digite o CPF do cliente para alterar dados da conta:");
-                String alterarUsuarioCpf = input.nextLine();
 
-            Usuario usuarioEncontrado = null;
+            boolean cpfAceito = false;
 
-            for (Usuario u : Gerente.usuarios) {
+            while (!cpfAceito) {
 
-                if (u.getCpf().equals(alterarUsuarioCpf)) {
+                System.out.println("Digite o CPF do cliente para alterar dados da conta:");
+                    String alterarUsuarioCpf = input.nextLine();
 
-                    usuarioEncontrado = u;
+                if (FormatadorCpf.isFormatoValido(alterarUsuarioCpf)) {
+
+                    alterarUsuarioCpf = FormatadorCpf.formatarCpf(alterarUsuarioCpf); // DEVE Formatar a visualização para encaixar com o cpf da conta aberta
+
+                    Usuario usuarioEncontrado = null;
+
+                    for (Usuario u : Gerente.usuarios) {
+
+                        if (u.getCpf().equals(alterarUsuarioCpf)) {
+
+                            usuarioEncontrado = u;
+
+                            break;
+
+                        }
+
+                    }
+
+                    if (usuarioEncontrado != null) {
+
+                        System.out.println("Usuário para CPF " + usuarioEncontrado.getCpf() + " encontrado. Digite a senha antiga do usuário:");
+                        String senhaAlt = input.nextLine();
+
+                        if (usuarioEncontrado.getSenha().equals(senhaAlt)) {
+
+                            System.out.println("Digite o novo nome:");
+                                String novoNome = input.nextLine();
+                            
+                            System.out.println("Digite a nova senha:");
+                                String novaSenha = input.nextLine();
+
+                            System.out.println("Digite o novo CPF:");
+                                String novoCpf = input.nextLine();
+
+                            gerente.alterarUsuario(alterarUsuarioCpf, novoNome, novaSenha,novoCpf);
+
+                            cpfAceito = true;
+
+                        }
+
+                        else {
+
+                            System.out.println();
+                            System.out.println("Ops! Senha incorreta. Tente novamente.");
+                            System.out.println();
+
+                        }
+
+                    }
+
+                    else {
+
+                        System.out.println();
+                        System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
+                        System.out.println();
+
+                    }
+
+                }
+
+                else {
+
+                    System.out.println("\nErro! Formato inválido. O CPF deve conter 11 números.\n");
 
                     break;
 
@@ -501,42 +614,6 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
             }
 
-            if (usuarioEncontrado != null) {
-
-                System.out.println("Usuário para CPF " + usuarioEncontrado.getCpf() + " encontrado. Digite a senha antiga do usuário:");
-                String senhaAlt = input.nextLine();
-
-                if (usuarioEncontrado.getSenha().equals(senhaAlt)) {
-
-                    System.out.println("Digite o novo nome:");
-                        String novoNome = input.nextLine();
-                    
-                    System.out.println("Digite a nova senha:");
-                        String novaSenha = input.nextLine();
-
-                    gerente.alterarUsuario(alterarUsuarioCpf, novoNome, novaSenha);
-
-                }
-
-                else {
-
-                    System.out.println();
-                    System.out.println("Ops! Senha incorreta. Tente novamente.");
-                    System.out.println();
-
-                }
-
-            }
-
-            else {
-
-                System.out.println();
-                System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
-                System.out.println();
-
-            }
-
         }
 
 }
-

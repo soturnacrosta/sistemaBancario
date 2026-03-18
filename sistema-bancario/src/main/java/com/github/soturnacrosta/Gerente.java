@@ -54,7 +54,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
                     System.out.println("Parabéns!");
                     System.out.println("Conta aberta com sucesso!");
                     System.out.println("Nome: " + usuarioNovo.getNome() + ".");
-                    System.out.println("CPF: " + usuarioNovo.getCpf());
+                    System.out.println("CPF: " + FormatadorCpf.formatarCpf(usuarioNovo.getCpf()));
                     System.out.println(("Agência: " + contaNova.getAgencia()));
                     System.out.println("Conta " + usuarioNovo.getContaBancaria());
                     System.out.println();
@@ -114,7 +114,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
  
         }
 
-        void alterarUsuario (String usuarioAltCpf, String novoNome, String novaSenha ) {
+        void alterarUsuario (String usuarioAltCpf, String novoNome, String novaSenha, String novoCpf ) {
 
              
             Usuario usuarioEncontrado = null;
@@ -135,6 +135,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
 
                 usuarioEncontrado.setNome(novoNome); //altere os dados do objeto que foi pesquisado. não instancie um novo objeto vazio!!!
                 usuarioEncontrado.setSenha(novaSenha);
+                usuarioEncontrado.setCpf(novoCpf);
 
                 System.out.println();
                 System.out.println("Conta atualizada com sucesso!");
