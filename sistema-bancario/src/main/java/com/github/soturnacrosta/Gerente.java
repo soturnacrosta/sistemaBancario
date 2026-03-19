@@ -1,6 +1,5 @@
 package com.github.soturnacrosta;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Gerente { // responsável por administrar as contas e os dados do usuário
 

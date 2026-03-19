@@ -223,7 +223,7 @@ public class ContaBancaria { // cérebro do sistema.
         }
 
         public void setConta(String conta) {
-            this.numero = numero;
+            this.numero = conta;
         }
 
         public double getSaldo() {
@@ -247,7 +247,8 @@ public class ContaBancaria { // cérebro do sistema.
         }
 
         public void setContasAbertas(ArrayList<ContaBancaria> contasAbertas) {
-            this.contasAbertas = contasAbertas;
+            ContaBancaria.contasAbertas = contasAbertas;        
+            
         }
         public String getNumero() {
             return numero;

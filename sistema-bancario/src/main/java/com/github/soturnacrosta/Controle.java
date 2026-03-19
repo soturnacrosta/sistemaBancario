@@ -1,6 +1,4 @@
 package com.github.soturnacrosta;
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -12,7 +10,6 @@ public class Controle { // responsável pelos menus de contato ao usuário
     ContaBancaria contaBancaria;
     Scanner input = new Scanner (System.in);
     Gerente gerente = new Gerente();    
-    Usuario usuario;
 
         void painelControle () {
 
@@ -48,7 +45,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                             System.out.println();
 
-                            loginCliente = FormatadorCpf.formatarCpf(loginCliente);
+                            loginCliente = FormatadorCpf.formatarCpf(loginCliente); // formata o cpf pra fazer o login
 
                             for (Usuario u : Gerente.usuarios) { // para comparar a senha passada com a senha de um usuário, precisa percorrer a lista. Isso serve para não criar uma instância do objeto
                                 // Valida CPF e Senha
@@ -432,8 +429,24 @@ public class Controle { // responsável pelos menus de contato ao usuário
                         System.out.println("Digite o nome completo:");
                             String abrirNome = input.nextLine();
 
+                        if (!ValidarEntrada.isNomeValido(abrirNome)) {
+
+                            System.out.println("\nErro: O nome deve conter apenas letras e ter no máximo 8 caracteres.\n");
+
+                            continue;
+
+                        }
+
                         System.out.println("Digite uma senha:");
                             String abrirSenha = input.nextLine();
+
+                        if (!ValidarEntrada.isSenhaValida(abrirSenha)) {
+
+                            System.out.println("\nErro: A senha deve conter apenas letras e números e ter no máximo 8 caracteres.\n");
+
+                            continue;
+
+                        }
                         
                         System.out.println();
 
@@ -613,9 +626,25 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                 System.out.println("Digite o novo nome:");
                     String novoNome = input.nextLine();
+
+                if (!ValidarEntrada.isNomeValido(novoNome)) {
+
+                    System.out.println("\nErro: O nome deve conter apenas letras e ter no máximo 8 caracteres.\n");
+
+                    continue;
+
+                }
                 
                 System.out.println("Digite a nova senha:");
                     String novaSenha = input.nextLine();
+
+                if (!ValidarEntrada.isSenhaValida(novaSenha)) {
+
+                    System.out.println("\nErro: A senha deve conter apenas letras e números e ter no máximo 8 caracteres.\n");
+
+                    continue;
+
+                }
 
                 System.out.println("Digite o novo CPF:");
                     String novoCpf = input.nextLine();
@@ -631,7 +660,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                 }
 
-                novoCpf = FormatadorCpf.formatarCpf(alterarUsuarioCpf); // DEVE Formatar a visualização para encaixar com o cpf da conta aberta
+                novoCpf = FormatadorCpf.formatarCpf(novoCpf); // DEVE Formatar a visualização para encaixar com o cpf da conta aberta
 
                 gerente.alterarUsuario(alterarUsuarioCpf, novoNome, novaSenha,novoCpf);
 
