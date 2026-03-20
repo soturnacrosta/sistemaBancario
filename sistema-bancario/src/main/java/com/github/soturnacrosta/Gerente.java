@@ -7,7 +7,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
     // importante perceber que as listas dentro da classe permanecem sempre ativas e quando dentro dos métodos, somem quando os métodos terminam
     // lista static para que todos os métodos de usuario compartilhem a mesma lista
 
-        void abrirConta (Usuario usuarioNovo) {
+        void abrirConta (Usuario usuarioNovo) { //abre conta
 
             boolean existe = false;
 
@@ -62,11 +62,11 @@ public class Gerente { // responsável por administrar as contas e os dados do u
 
         }
 
-        void fecharConta (String cpfDeletar) {
+        void fecharConta (String cpfDeletar) { //fecha conta
 
             Usuario usuarioEncontrado = null;
 
-            for (Usuario u : usuarios) {
+            for (Usuario u : usuarios) { //busca cpf na lista
 
                 if (u.getCpf().equals(cpfDeletar)){
 
@@ -113,12 +113,12 @@ public class Gerente { // responsável por administrar as contas e os dados do u
  
         }
 
-        void alterarUsuario (String usuarioAltCpf, String novoNome, String novaSenha, String novoCpf ) {
+        void alterarUsuario (String usuarioAltCpf, String novoNome, String novaSenha, String novoCpf ) { //altera usuario
 
              
             Usuario usuarioEncontrado = null;
 
-            for (Usuario u : usuarios) {
+            for (Usuario u : usuarios) { //busca cpf na lista
 
                 if (u.getCpf().equals(usuarioAltCpf)) {
 

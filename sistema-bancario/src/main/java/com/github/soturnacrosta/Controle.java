@@ -59,6 +59,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                 }
                             }
 
+                            //verifica cpf e senha de uma vez e caso seja válido, tira o null e inicia o login.
                             if (usuarioAutenticado != null) {
 
 
@@ -128,7 +129,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                             } 
                             
                             else {
-
+                                //caso o login não seja válido e não saia do usuarioAutenticado = null
                                 System.out.println("CPF ou Senha incorretos.");
                                 System.out.println();
 
