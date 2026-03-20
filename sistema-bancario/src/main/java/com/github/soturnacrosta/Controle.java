@@ -333,42 +333,16 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
                 System.out.println("Digite o número da conta destino: "); // pede a senha
                     String numeroDestino = input.nextLine();
-
-                    // precisa converter a senha do tipo String para o tipo classe que contem a conta bancária
-                    ContaBancaria contaDestino = ContaBancaria.buscarContaPorNumero(numeroDestino); // converte a string de entrada para objeto de classe
                     
-                    if (contaDestino != null) { // Se a conta foi encontrada na lista global
-                    
-                        if (!contaDestino.getConta().equals(usuarioAutenticado.getContaBancaria().getConta())) { // compara os numeros das contas
+                System.out.println("Digito o valor:");
+                    double valor = input.nextDouble();
+                    input.nextLine();
 
-                            System.out.println("Digito o valor:");
-                                double ted = input.nextDouble();
-                                input.nextLine();
+                System.out.println("Adicione uma descrição:");  
+                    String descricao = input.nextLine();
 
-                            System.out.println("Adicione uma descrição:");  
-                                String descricao = input.nextLine();
-
-                            contaBancaria.realizarTed(ted, numeroDestino, descricao); // conta destino já é o numero da conta!
-                            // chama o método
-                        }
-
-                        else {
-
-                            System.out.println();
-                            System.out.println("Erro! A conta de destino não deve ser a conta remetente."); // se for a mesma conta
-                            System.out.println();
-
-                        }
-
-                    }
-
-                    else {
-
-                        System.out.println();
-                        System.out.println("Usuário não encontrado para esse CPF! Tente novamente.");
-                        System.out.println();
-
-                    }
+                contaBancaria.realizarTed(valor, numeroDestino, descricao); // conta destino já é o numero da conta!
+                // chama o método
 
             }
 

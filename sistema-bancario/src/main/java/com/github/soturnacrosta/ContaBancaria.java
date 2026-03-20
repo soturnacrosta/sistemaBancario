@@ -78,59 +78,55 @@ public class ContaBancaria { // cérebro do sistema.
                 System.out.println();
                 System.out.println("Erro: Limite de 5 transações TED diárias atingido."); 
                 System.out.println();
+
                 return; // Encerra o método sem realizar a transferência
 
             }
 
-            else { // se não tiver estourado limite
+            if (this.numero.equals(contaDestino)) { // compara os numeros das contas
 
-                ContaBancaria contaEncontrada = null;
+                System.out.println();
+                System.out.println("Erro! A conta de destino não deve ser a conta remetente."); // se for a mesma conta
+                System.out.println();
 
-                for (ContaBancaria ce : contasAbertas) { // logica para encontrar uma conta destino
+                return;
 
-                    if (contaDestino.equals(ce.getConta())) {  // conta destino já é o numero da conta!
+            }
 
-                        contaEncontrada = ce;
-                        break;
+            ContaBancaria contaEncontrada = ContaBancaria.buscarContaPorNumero(contaDestino); //método de buscar contas
 
-                    }
+            if (contaEncontrada != null) {
 
-                }
-                
-                if (contaEncontrada != null) {
+                if (valor > saldo || valor <= 0) { // verifica se há saldo para transação
 
-                    if (valor > saldo || valor <= 0) { // verifica se há saldo para transação
-
-                        throw new SaldoInsuficienteException(this.saldo, valor);
-
-                    }
-
-                    else {                       
-
-                        saldo = saldo - valor;  //debita o valor na propria conta
-
-                        contaEncontrada.saldo += valor; // acrescenta o valor na conta destino 
-
-                        Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
-                        historico.add(transacao); // adicione a lista global
-                        
-                        System.out.println();
-                        System.out.println("Transação efetuada com sucesso!");
-                        System.out.println("TED no valor de: " + MoedaUtilizada.formatar(valor) + ".");
-                        System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
-                        System.out.println();
-
-                    }
+                    throw new SaldoInsuficienteException(this.saldo, valor);
 
                 }
 
-                else { // caso nao encontrada
+                else {                       
 
+                    saldo = saldo - valor;  //debita o valor na propria conta
+
+                    contaEncontrada.saldo += valor; // acrescenta o valor na conta destino 
+
+                    Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
+                    historico.add(transacao); // adicione a lista global
+                    
                     System.out.println();
-                    System.out.println("Erro! Conta " + contaDestino + " não encontrada!");
+                    System.out.println("Transação efetuada com sucesso!");
+                    System.out.println("TED no valor de: " + MoedaUtilizada.formatar(valor) + ".");
+                    System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
                     System.out.println();
 
                 }
+
+            }
+
+            else { // caso nao encontrada
+
+                System.out.println();
+                System.out.println("Erro! Conta " + contaDestino + " não encontrada!");
+                System.out.println();
 
             }
 

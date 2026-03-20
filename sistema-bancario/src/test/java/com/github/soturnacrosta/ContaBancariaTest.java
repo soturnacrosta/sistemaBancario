@@ -65,7 +65,7 @@ public class ContaBancariaTest {
     }
 
     @Test
-    @DisplayName("Aceita TED sem destinatario")
+    @DisplayName("Aceita TED sem destinatario?")
     public void aceitaTedNull () {
 
         ContaBancaria remetente = new ContaBancaria();
@@ -76,6 +76,23 @@ public class ContaBancariaTest {
         // O teste passa se o saldo CONTINUAR 500 (ou seja, não descontou nada)
         Assertions.assertEquals(500.0, remetente.getSaldo(),  "Erro: O sistema descontou valor de um TED enviado para destinatário nulo!");
 
+    }
+
+    @Test
+    @DisplayName("Aceita TED para o prórpio remetente?")
+    public void aceitaTedMesmoDestinatario () {
+
+        ContaBancaria remetente = new ContaBancaria();
+        remetente.setSaldo(500); // Dá um saldo inicial
+        
+        //Passamos o próprio número da conta como destino!
+        String proprioNumero = remetente.getNumero();
+
+        remetente.realizarTed(300, proprioNumero, "Transferência para mim mesmo");
+
+        // O teste passa se o saldo CONTINUAR 500 (ou seja, não descontou nada)
+        Assertions.assertEquals(500.0, remetente.getSaldo(), "Erro: O sistema descontou valor de um TED enviado para o próprio remetente!");
+        
     }
 
 }
