@@ -7,6 +7,7 @@ public class Transacao { // responsável por registrar os dados das transações
     private Date data;
     private String descricao;
     private String contaDestino;
+    private int idTransacao;
 
     public Transacao(double valor, String contaDestino, String descricao) { // precisa do construtor para gerar o recibo
         // não precisa passar DATE como parâmetro!!!
