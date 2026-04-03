@@ -2,6 +2,10 @@ package com.github.soturnacrosta;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.github.soturnacrosta.model.bean.Usuario;
+import com.github.soturnacrosta.model.dao.ContaBancariaDAO;
+import com.github.soturnacrosta.model.dao.UsuarioDAO;
+
 public class Controle { // responsável pelos menus de contato ao usuário
 
     Usuario usuarioAutenticado = null;
@@ -10,6 +14,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
     ContaBancaria contaBancaria;
     Scanner input = new Scanner (System.in);
     Gerente gerente = new Gerente();    
+    UsuarioDAO usuarioDao = new UsuarioDAO();
 
         void painelControle () {
 
@@ -46,21 +51,11 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                     System.out.println();
 
                                     loginCliente = FormatadorCpf.formatarCpf(loginCliente); // formata o cpf pra fazer o login
-
-                                    for (Usuario u : Gerente.usuarios) { // para comparar a senha passada com a senha de um usuário, precisa percorrer a lista. Isso serve para não criar uma instância do objeto
-                                        // Valida CPF e Senha
-                                        if (u.getCpf().equals(loginCliente) && u.getSenha().equals(senhaCliente)) {
-
-                                            usuarioAutenticado = u;
-                                            this.contaBancaria = u.getContaBancaria(); // associa a conta encontrada a uma conta do banco
-
-                                            break; 
-
-                                        }
-                                    }
+                                    Usuario usuarioEncontrado = usuarioDao.readByCpf(loginCliente); //pega o cpf do usuarioNovo que é um objeto
                                     //verifica cpf e senha de uma vez e caso seja válido, tira o null e inicia o login.
-                                    if (usuarioAutenticado != null) {
+                                    if (usuarioEncontrado != null && usuarioEncontrado.getSenha().equals(senhaCliente)) {
 
+                                        usuarioAutenticado = usuarioEncontrado;
 
                                         while (!menuUsuario) {
 
@@ -101,7 +96,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                                     
                                                     case "5": // Tirar extrato
 
-                                                        contaBancaria.imprimirExtrato();
+                                                        usuarioImprimirExtrato();
                                                         break; 
 
                                                     case "6": // detalhes da conta
@@ -316,6 +311,30 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("Conta bancária: " + contaBancaria.getConta());
             System.out.println("Saldo: " + MoedaUtilizada.formatar(contaBancaria.getSaldo()));
             System.out.println();
+
+        }
+
+        void usuarioImprimirExtrato () {
+
+            ContaBancariaDAO contaDao = new ContaBancariaDAO();
+
+            com.github.soturnacrosta.model.bean.ContaBancaria contaBean = contaDao.readByCpf(usuarioAutenticado.getCpf());
+
+        if (contaBean != null) {
+                // 2. Passamos o objeto que acabamos de buscar no banco
+                // Assumindo que o método imprimirExtrato está no seu Bean ou Service
+                ContaBancaria contaOriginal = new ContaBancaria();
+
+                contaOriginal.setNumero(contaBean.getNumero());
+                contaOriginal.setSaldo(contaBean.getSaldo());
+
+                contaOriginal.imprimirExtrato(contaBean.getNumero());       
+
+            } else {
+
+                System.out.println("Erro: Conta não encontrada para este usuário.");
+                
+            }
 
         }
 

@@ -1,22 +1,27 @@
 package com.github.soturnacrosta;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
+
+import com.github.soturnacrosta.model.dao.ContaBancariaDAO;
+import com.github.soturnacrosta.model.dao.TransacaoDAO;
+import com.github.soturnacrosta.connection.ConnectionFactory;
+import com.github.soturnacrosta.model.bean.Transacao;
 
 public class ContaBancaria { // cérebro do sistema. 
 
     Scanner input = new Scanner (System.in);
-    private String agencia, numero;
+    private String agencia;
+    private int numero;
     protected double saldo;
     static int contadorContas = 1000; //contador de numero da conta do cliente
-    private ArrayList <Transacao> historico = new ArrayList <> (); // para gerar o histórico de transações
-    static ArrayList <ContaBancaria> contasAbertas = new ArrayList<>(); // todas as classes compartilham do mesmo banco da lista
-
-        public ContaBancaria() {
-
-            contadorContas++; // Incrementa cada vez que uma nova conta é criada
-            this.numero = String.valueOf(contadorContas);
-
-        }
+    TransacaoDAO transacaoDao = new TransacaoDAO();
+    ContaBancariaDAO contaDao = new ContaBancariaDAO();
+    //private ArrayList <Transacao> historico = new ArrayList <> (); // para gerar o histórico de transações
+    //static ArrayList <ContaBancaria> contasAbertas = new ArrayList<>(); // todas as classes compartilham do mesmo banco da lista
         
         double sacar (double valor, String senhaSaque) {
 
@@ -73,7 +78,8 @@ public class ContaBancaria { // cérebro do sistema.
 
         void realizarTed (double valor, String contaDestino, String descricao) {
 
-            if (contarTedDiario() >= 5) { // verifica limite diário de transações
+
+            if (contarTedDiario(this.numero) >= 5) { // verifica limite diário de transações
 
                 System.out.println();
                 System.out.println("Erro: Limite de 5 transações TED diárias atingido."); 
@@ -83,7 +89,9 @@ public class ContaBancaria { // cérebro do sistema.
 
             }
 
-            if (this.numero.equals(contaDestino)) { // compara os numeros das contas
+            int destinoInt = Integer.parseInt(contaDestino); //converte int com int!
+
+            if (this.numero == destinoInt) { // compara os numeros das contas 
 
                 System.out.println();
                 System.out.println("Erro! A conta de destino não deve ser a conta remetente."); // se for a mesma conta
@@ -93,7 +101,7 @@ public class ContaBancaria { // cérebro do sistema.
 
             }
 
-            ContaBancaria contaEncontrada = ContaBancaria.buscarContaPorNumero(contaDestino); //método de buscar contas
+            com.github.soturnacrosta.model.bean.ContaBancaria contaEncontrada = ContaBancaria.buscarContaPorNumero(contaDestino); //método de buscar contas
 
             if (contaEncontrada != null) {
 
@@ -107,10 +115,18 @@ public class ContaBancaria { // cérebro do sistema.
 
                     saldo = saldo - valor;  //debita o valor na propria conta
 
-                    contaEncontrada.saldo += valor; // acrescenta o valor na conta destino 
+                    contaEncontrada.setSaldo(getSaldo()+valor);// acrescenta o valor na conta destino 
 
-                    Transacao transacao = new Transacao((valor), contaDestino, descricao); // além de instanciar a lista lá globalmente, instancie o objeto aqui
-                    historico.add(transacao); // adicione a lista global
+                    Transacao transacao = new Transacao(); // além de instanciar a lista lá globalmente, instancie o objeto aqui
+                    transacao.setValor(valor);
+
+                    int numeroConta = Integer.parseInt(contaDestino); // faz a conversão para int
+
+                    com.github.soturnacrosta.model.bean.ContaBancaria contaDestinoObj = contaDao.readByNumero(numeroConta); //busca o número de conta na DAO
+                    
+                    transacao.setContaDestino(contaDestinoObj);
+                    transacao.setDescricao(descricao);
+                    // adicione a lista global
                     
                     System.out.println();
                     System.out.println("Transação efetuada com sucesso!");
@@ -132,25 +148,29 @@ public class ContaBancaria { // cérebro do sistema.
 
         }
 
-        public void imprimirExtrato() { // gera o extrato através de uma arrayList de transações (funções) registradas 
+        public void imprimirExtrato(int numeroConta) { // gera o extrato através de uma arrayList de transações (funções) registradas 
 
-            if (this.historico.isEmpty()) { // verifica se o extrato está vazio
+            TransacaoDAO transacaoDao = new TransacaoDAO();
+            // O DAO já deve trazer a lista filtrada e ordenada (SELECT ... LIMIT 10)
+            List<com.github.soturnacrosta.model.bean.Transacao> extrato = transacaoDao.readByConta(numeroConta);
 
-                System.out.println();
-                System.out.println("Histórico vazio.");
-                System.out.println();
+            if (extrato.isEmpty()) {
+
+                System.out.println("\nHistórico vazio.\n");
+
                 return;
 
             }
 
             int contador = 0;
 
-            for (int i = historico.size() -1; i>= 0 && contador < 10; i --){ // define o teto como 10
+            for (int i = extrato.size() -1; i>= 0 && contador < 10; i --){ // define o teto como 10
                 
-                Transacao t = historico.get(i); // imprime o extrato pegando os dados na clase Transacao
+                Transacao t = extrato.get(i); // imprime o extrato pegando os dados na clase Transacao
 
                 System.out.println();
                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX EXTRATO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                System.out.println("ID Transcao: " + t.getIdTransacao());
                 System.out.println("Destinatário: " + t.getContaDestino());
                 System.out.println("Valor: " + MoedaUtilizada.formatar(t.getValor()));
                 System.out.println("Data: " + t.getData());
@@ -163,44 +183,63 @@ public class ContaBancaria { // cérebro do sistema.
 
         }
 
-        private int contarTedDiario() { // função para verificar limite de transações diarias
+        private int contarTedDiario(int numeroConta) { // função para verificar limite de transações diarias
 
-            int contador = 0;
-            java.util.Date hoje = new java.util.Date();
-            
-            java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("dd/MM/yyyy");  // Formatador para comparar apenas Dia/Mês/Ano, ignorando as horas
+           Connection connection = ConnectionFactory.getConnection();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            int total = 0;
 
+            try {
+                // O SQL conta quantas transações existem para essa conta na data de hoje
+                String sql = "SELECT COUNT(*) FROM Transacao WHERE fk_conta_origem = ? AND DATE(data) = CURDATE()";
+                stmt = connection.prepareStatement(sql);
+                stmt.setInt(1, numeroConta);
+                rs = stmt.executeQuery();
 
-            String dataAtual = fmt.format(hoje); // pega a data formatada e guarda numa String
+                if (rs.next()) {
 
-            for (Transacao t : historico) {
-
-                // Comparamos a data da transação salva com a data de agora
-                 if (fmt.format(t.getData()).equals(dataAtual)) {
-
-                        contador++; // Conta todas do dia, independente da descrição
-
-                    }
-
-                }
-            
-            return contador;
-
-        }
-
-        public static ContaBancaria buscarContaPorNumero(String numeroProcurado) { // conversor String > Conta bancária
-
-            for (ContaBancaria cb : contasAbertas) {
-
-                if (cb.getNumero().equals(numeroProcurado)) {
-
-                    return cb; // Aqui a String "virou" o Objeto da Classe
+                    total = rs.getInt(1);
 
                 }
+
+            } 
+            
+            catch (SQLException e) {
+
+                throw new RuntimeException("Erro ao contar transações diárias", e);
+
+            } 
+            
+            finally {
+
+                ConnectionFactory.closeConnection(connection, stmt, rs);
 
             }
 
-            return null; // Caso não encontre nenhuma conta com esse número
+            return total;
+
+        }
+
+        public static com.github.soturnacrosta.model.bean.ContaBancaria buscarContaPorNumero(String numeroProcurado) { // conversor String > Conta bancária
+
+            try {
+
+                ContaBancariaDAO daoTemp = new ContaBancariaDAO();
+
+                int contaProcurada = Integer.parseInt(numeroProcurado);
+
+                com.github.soturnacrosta.model.bean.ContaBancaria contas = daoTemp.readByNumero(contaProcurada);
+
+                return daoTemp.readByNumero(contaProcurada);
+
+            }
+
+            catch (Exception e) {
+
+                return null; // Se der erro na conversão ou no banco
+
+            }
 
         }
 
@@ -213,11 +252,11 @@ public class ContaBancaria { // cérebro do sistema.
             this.agencia = agencia;
         }
 
-        public String getConta() {
+        public int getConta() {
             return numero;
         }
 
-        public void setConta(String conta) {
+        public void setConta(int conta) {
             this.numero = conta;
         }
 
@@ -229,28 +268,12 @@ public class ContaBancaria { // cérebro do sistema.
             this.saldo = saldo;
         }
 
-        public ArrayList<Transacao> getHistorico() {
-            return historico;
-        }
-
-        public void setHistorico(ArrayList<Transacao> historico) {
-            this.historico = historico;
-        }
-
-        public ArrayList<ContaBancaria> getContasAbertas() {
-            return contasAbertas;
-        }
-
-        public void setContasAbertas(ArrayList<ContaBancaria> contasAbertas) {
-            ContaBancaria.contasAbertas = contasAbertas;        
-            
-        }
-        public String getNumero() {
+        public int getNumero() {
             return numero;
         }
 
-        @Override
-        public String toString() {
-            return this.numero; // Ou o nome da variável onde você guardou o contador
-        }       
+        public void setNumero(int numero) {
+            this.numero = numero;
+        }
+
 }

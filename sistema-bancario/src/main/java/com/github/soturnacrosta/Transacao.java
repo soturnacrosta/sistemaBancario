@@ -7,7 +7,7 @@ public class Transacao { // responsável por registrar os dados das transações
     private Date data;
     private String descricao;
     private String contaDestino;
-    private int idTransacao;
+    private int idTransacao; // quem faz a contagem é o MYSQL/BANCO DE DADOS!!!
 
     public Transacao(double valor, String contaDestino, String descricao) { // precisa do construtor para gerar o recibo
         // não precisa passar DATE como parâmetro!!!
@@ -34,5 +34,13 @@ public class Transacao { // responsável por registrar os dados das transações
     public String getContaDestino() {
         return contaDestino;
     }
-    
+
+    public int getIdTransacao() {
+        return idTransacao;
+    }
+
+    public void setIdTransacao(int idTransacao) {
+        this.idTransacao = idTransacao;
+    }
+
 }

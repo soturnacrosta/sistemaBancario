@@ -1,6 +1,9 @@
 package com.github.soturnacrosta;
 import java.util.Scanner;
 
+import com.github.soturnacrosta.model.bean.Usuario;
+import com.github.soturnacrosta.model.dao.UsuarioDAO;
+
 public class ControleGerente {
 
     Usuario usuarioAutenticado = null;
@@ -8,6 +11,7 @@ public class ControleGerente {
     ContaBancaria contaBancaria;
     Scanner input = new Scanner (System.in);
     Gerente gerente = new Gerente();  
+    UsuarioDAO usuarioDao = new UsuarioDAO();
 
     public void painelGerente () {
 
@@ -119,7 +123,7 @@ public class ControleGerente {
                     abrirCPF = FormatadorCpf.formatarCpf(abrirCPF); // se tiver 11 digitos, formata a visualização e prossegue
 
                     System.out.println("Digite o nome completo:");
-                        String abrirNome = input.nextLine();
+                        String abrirNome = input.nextLine().trim();
 
                     if (!ValidarEntrada.isNomeValido(abrirNome)) {
 
@@ -142,10 +146,12 @@ public class ControleGerente {
                     
                     System.out.println();
 
-                    ContaBancaria novaConta = new ContaBancaria(); // instancia uma nova conta para o usuario
-                    // instancia um novo gerente para administrar
+                    Usuario usuario = new Usuario ();   // instancia um novo usuario com os dados passados 
+                    
+                    usuario.setCpf(abrirCPF); //como o construtor mudou do original pro bean, devemos adicionar o dados em seguida
+                    usuario.setNome(abrirNome);
+                    usuario.setSenha(abrirSenha);
 
-                    Usuario usuario = new Usuario (novaConta, abrirSenha, abrirNome, abrirCPF);   // instancia um novo usuario com os dados passados            
                     gerente.abrirConta(usuario); // chama o método em Gerente
 
                     cpfAceito = true;
@@ -196,20 +202,8 @@ public class ControleGerente {
             }
 
             cpfDeletar = FormatadorCpf.formatarCpf(cpfDeletar); // DEVE Formatar a visualização para encaixar com o cpf da conta aberta
-
-            Usuario usuarioEncontrado = null;
             
-            for (Usuario u : Gerente.usuarios) {
-
-                if (u.getCpf().equals(cpfDeletar)) {
-
-                    usuarioEncontrado = u;
-
-                    break;
-
-                }
-
-            }
+            Usuario usuarioEncontrado = usuarioDao.readByCpf(cpfDeletar); //pega o cpf do usuarioNovo que é um objeto
 
             if (usuarioEncontrado == null) { // verifica se existe uma conta com o cpf
 
@@ -248,11 +242,13 @@ public class ControleGerente {
         System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX ALTERAR CONTA XXXXXXXXXXXXXXXXXXXXXXXXX");
 
         boolean cpfAceito = false;
+        Usuario usuarioEncontrado = null;
+        String alterarUsuarioCpf;
 
         while (!cpfAceito) {
 
             System.out.println("Digite o CPF do cliente para alterar dados da conta. Digite '0' para cancelar:");
-                String alterarUsuarioCpf = input.nextLine();
+                alterarUsuarioCpf = input.nextLine();
 
             if (alterarUsuarioCpf.equals("0")) { // encerra o laço caso o usuário decida
 
@@ -277,19 +273,8 @@ public class ControleGerente {
 
             alterarUsuarioCpf = FormatadorCpf.formatarCpf(alterarUsuarioCpf); // DEVE Formatar a visualização para encaixar com o cpf da conta aberta
 
-            Usuario usuarioEncontrado = null;
-
-            for (Usuario u : Gerente.usuarios) {
-
-                if (u.getCpf().equals(alterarUsuarioCpf)) {
-
-                    usuarioEncontrado = u;
-
-                    break;
-
-                }
-
-        } // faz a busca de cpf no banco de dados
+            usuarioEncontrado = usuarioDao.readByCpf(alterarUsuarioCpf); //pega o cpf do usuarioNovo que é um objeto
+            // faz a busca de cpf no banco de dados
 
         // segunda clausula de guarda
         if (usuarioEncontrado == null) { // caso não encontre um cpf no banco de dados
