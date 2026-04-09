@@ -8,7 +8,6 @@ public class ControleGerente {
 
     Usuario usuarioAutenticado = null;
     private boolean condicao = false;
-    ContaBancaria contaBancaria;
     Scanner input = new Scanner (System.in);
     Gerente gerente = new Gerente();  
     UsuarioDAO usuarioDao = new UsuarioDAO();

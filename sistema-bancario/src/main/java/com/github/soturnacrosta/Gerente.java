@@ -35,7 +35,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
             // salva na lista
             contaNova.setAgencia("0001-9"); // seta a criação da agencia na hora da abertura
             // delegue a criação da conta apenas para o gerente. não crie duplicidades
-
+            contaNova.setNumero(0);
             contaNova.setSaldo(0); // o saldo da conta nova se inicia com zero 
             contaNova.setUsuario_cpf(usuarioNovo); //associa o cpf A conta
 

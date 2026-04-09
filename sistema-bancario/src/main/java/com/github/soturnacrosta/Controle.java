@@ -2,6 +2,7 @@ package com.github.soturnacrosta;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.github.soturnacrosta.model.bean.ContaBancaria;
 import com.github.soturnacrosta.model.bean.Usuario;
 import com.github.soturnacrosta.model.dao.ContaBancariaDAO;
 import com.github.soturnacrosta.model.dao.UsuarioDAO;
@@ -11,10 +12,11 @@ public class Controle { // responsável pelos menus de contato ao usuário
     Usuario usuarioAutenticado = null;
     private String escolha; // switches tem que ser public
     private boolean condicao = false;
-    ContaBancaria contaBancaria;
+    ContaBancaria contaBancaria = new ContaBancaria();
     Scanner input = new Scanner (System.in);
     Gerente gerente = new Gerente();    
     UsuarioDAO usuarioDao = new UsuarioDAO();
+    Servicos servico = new Servicos();
 
         void painelControle () {
 
@@ -56,6 +58,10 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                     if (usuarioEncontrado != null && usuarioEncontrado.getSenha().equals(senhaCliente)) {
 
                                         usuarioAutenticado = usuarioEncontrado;
+
+                                        //// Carregue a conta bancária do usuário logado!
+                                        ContaBancariaDAO cDao = new ContaBancariaDAO();
+                                        this.contaBancaria = cDao.readByCpf(usuarioAutenticado.getCpf());
 
                                         while (!menuUsuario) {
 
@@ -190,7 +196,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
             }
            
-            System.out.println("Saldo: R$" + MoedaUtilizada.formatar(contaBancaria.getSaldo()) + ".");
+            System.out.println("Saldo: R$" + MoedaUtilizada.formatar(this.contaBancaria.getSaldo()) + ".");
 
             try {
 
@@ -198,7 +204,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                     double saque = input.nextDouble();
                     input.nextLine(); // limpa o buffer para evitar duplicação de submenus
 
-                contaBancaria.sacar(saque, senhaSaque); // chama o método de saque em ContaBancária
+                servico.sacar(this.contaBancaria, saque, senhaSaque); // chama o método de saque em ContaBancária
 
             }
 
@@ -229,7 +235,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                 double deposito = input.nextDouble();
                 input.nextLine(); // limpa o buffer para evitar duplicação de submenus
 
-                contaBancaria.depositar(deposito); // chama o método de depósito em ContaBancária
+                servico.depositar(this.contaBancaria, deposito); // chama o método de depósito em ContaBancária
 
             }
 
@@ -270,7 +276,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                 System.out.println("Adicione uma descrição:");  
                     String descricao = input.nextLine();
 
-                contaBancaria.realizarTed(valor, numeroDestino, descricao); // conta destino já é o numero da conta!
+                servico.realizarTed(this.contaBancaria, valor, numeroDestino, descricao); // conta destino já é o numero da conta!
                 // chama o método
 
             }
@@ -308,7 +314,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("Nome: " + this.usuarioAutenticado.getNome()); // para acessar um atributo de outra classe sem instanciar novamente, transforme o atributo de login em global e o 
             System.out.println("CPF: " + FormatadorCpf.formatarCpf(this.usuarioAutenticado.getCpf())); // utilize
             System.out.println("Agência: " + this.contaBancaria.getAgencia());
-            System.out.println("Conta bancária: " + contaBancaria.getConta());
+            System.out.println("Conta bancária: " + this.contaBancaria.getNumero());
             System.out.println("Saldo: " + MoedaUtilizada.formatar(contaBancaria.getSaldo()));
             System.out.println();
 
@@ -318,7 +324,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
 
             ContaBancariaDAO contaDao = new ContaBancariaDAO();
 
-            com.github.soturnacrosta.model.bean.ContaBancaria contaBean = contaDao.readByCpf(usuarioAutenticado.getCpf());
+            ContaBancaria contaBean = contaDao.readByCpf(usuarioAutenticado.getCpf());
 
         if (contaBean != null) {
                 // 2. Passamos o objeto que acabamos de buscar no banco
@@ -328,7 +334,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                 contaOriginal.setNumero(contaBean.getNumero());
                 contaOriginal.setSaldo(contaBean.getSaldo());
 
-                contaOriginal.imprimirExtrato(contaBean.getNumero());       
+                servico.imprimirExtrato(contaBean.getNumero());       
 
             } else {
 

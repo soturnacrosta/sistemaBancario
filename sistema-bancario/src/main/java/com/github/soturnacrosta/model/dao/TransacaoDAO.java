@@ -10,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.soturnacrosta.connection.ConnectionFactory;
-import com.github.soturnacrosta.model.bean.ContaBancaria;
 import com.github.soturnacrosta.model.bean.Transacao;
 
 public class TransacaoDAO {
@@ -24,13 +23,13 @@ public class TransacaoDAO {
         
         try {
 
-            stmt = connection.prepareStatement("INSERT INTO Transacao (valor, descricao, data, contaDestino, contaOrigem) VALUES (?, ?, ?, ?, ?, ?)");
+            stmt = connection.prepareStatement("INSERT INTO Transacao (valor, descricao, data, contaDestino, fk_conta_origem) VALUES (?, ?, ?, ?, ?)");
 
-            stmt.setDouble(2, transacao.getValor());
-            stmt.setString(3, transacao.getDescricao());
-            stmt.setTimestamp(4, transacao.getData());
-            stmt.setString(5, String.valueOf(transacao.getContaDestino().getNumero())); // acessa APENAS o numero da conta e converte para STRING
-            stmt.setInt(6, transacao.getContaOrigem().getNumero()); // acessa APENAS o numero da conta
+            stmt.setDouble(1, transacao.getValor());
+            stmt.setString(2, transacao.getDescricao());
+            stmt.setTimestamp(3, transacao.getData());
+            stmt.setString(4, String.valueOf(transacao.getContaDestino().getNumero())); // acessa APENAS o numero da conta e converte para STRING
+            stmt.setInt(5, transacao.getContaOrigem().getNumero()); // acessa APENAS o numero da conta
             // na tabela a contaOrigem é int
 
             stmt.executeUpdate();
@@ -52,63 +51,6 @@ public class TransacaoDAO {
 
         }
 
-    }
-
-    public List<Transacao> read () {
-
-        Connection connection = ConnectionFactory.getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        List<Transacao> transacoes = new ArrayList<>();
-
-        try {
-
-            stmt = connection.prepareStatement("SELECT * FROM Transacao");
-            rs = stmt.executeQuery();
-
-            while (rs.next()) {
-
-                Transacao transacao = new Transacao();
-
-                transacao.setIdTransacao(rs.getInt("idTransacao"));
-                transacao.setValor(rs.getDouble("valor"));
-                transacao.setDescricao(rs.getNString("descricao"));
-                transacao.setData(rs.getTimestamp("data"));
-
-                String contaDestino = rs.getString ("contaDestino");
-                int contaOrigem = rs.getInt("fk_conta_origem");
-
-                ContaBancaria contaDes = new ContaBancaria();
-                ContaBancaria contaOri = new ContaBancaria(); 
-
-                contaOri.setNumero(contaOrigem);
-
-                // convertendo para int
-                contaDes.setNumero(Integer.parseInt(contaDestino));
-
-                transacao.setContaOrigem(contaOri);
-                transacao.setContaDestino(contaDes);
-
-                transacoes.add(transacao);
-            }
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            Logger.getLogger(TransacaoDAO.class.getName()).log(Level.SEVERE, null, e);
-
-            throw new RuntimeException("Erro ao buscar as transações no banco de dados", e);  
-
-        }
-
-        finally {
-
-            ConnectionFactory.closeConnection(connection, stmt, rs); // fecha todos os parâmetros!
-
-        }
-
-        return transacoes;
-         
     }
 
     public List<Transacao> readByConta(int numeroConta) {

@@ -7,6 +7,10 @@ public class ContaBancaria {
     private double saldo;
     private Usuario usuario_cpf;
 
+    public ContaBancaria() {
+
+    }
+    
     public int getNumero() {
         return numero;
     }

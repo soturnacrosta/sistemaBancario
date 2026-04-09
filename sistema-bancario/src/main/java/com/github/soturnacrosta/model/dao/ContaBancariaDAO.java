@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 import com.github.soturnacrosta.model.bean.ContaBancaria; // importe a classe correta, no caso do bean
@@ -47,61 +45,6 @@ public class ContaBancariaDAO {
             ConnectionFactory.closeConnection(connection, stmt);
 
         }
-
-    }
-
-    public List<ContaBancaria> read () {
-
-        Connection connection = ConnectionFactory.getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null; // para conter os dados para visualizar
-
-        // cria a lista que vai guardar os dados
-        List<ContaBancaria> contas = new ArrayList<>();
-
-        try {
-
-            stmt = connection.prepareStatement("SELECT * FROM ContaBancaria");
-            rs = stmt.executeQuery(); //fazendo as consultas e coloca no resultset
-
-            while (rs.next()) {
-
-                ContaBancaria conta = new ContaBancaria();
-                // pega os dados primitivos associando os nomes EXATOS do banco de dados
-                conta.setNumero(rs.getInt("numero"));
-                conta.setAgencia(rs.getString("agencia"));
-                conta.setSaldo(rs.getDouble("saldo"));
-
-                // O ResultSet pega a String do banco ("fk_usuario_cpf")
-                String cpfDoBanco = rs.getString("fk_usuario_cpf");
-
-                // Montamos o objeto Usuario e entregamos para a Conta
-                Usuario dono = new Usuario();
-
-                dono.setCpf(cpfDoBanco);
-                conta.setUsuario_cpf(dono);
-
-                contas.add(conta); // adiciona os dados a lista
-                
-            }
-
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-
-            Logger.getLogger(ContaBancariaDAO.class.getName()).log(Level.SEVERE, null, e);
-
-            throw new RuntimeException("Erro ao buscar as contas no banco de dados", e);  
-
-        }
-
-        finally {
-
-            ConnectionFactory.closeConnection(connection, stmt, rs); // fecha todos os parâmetros!
-
-        }
-
-        return contas;
 
     }
 
@@ -182,7 +125,7 @@ public class ContaBancariaDAO {
             try {
 
                 stmt = connection.prepareStatement("SELECT * FROM ContaBancaria WHERE numero = ?");
-                stmt.setString(1, "numero");
+                stmt.setInt(1, contaBusca);
                 rs = stmt.executeQuery();
 
                 if (rs.next()) { // Se achou, monta o objeto
@@ -191,7 +134,15 @@ public class ContaBancariaDAO {
                     contaEncontrada.setNumero(rs.getInt("numero"));
                     contaEncontrada.setAgencia(rs.getString("agencia"));
                     contaEncontrada.setSaldo(rs.getDouble("saldo"));
-                    // ... (seta o resto dos dados)
+                    
+                    Usuario donoDaConta = new Usuario();
+
+                    // 2. Pega a String do CPF que veio do banco e guarda DENTRO desse Usuario
+                    donoDaConta.setCpf(rs.getString("fk_usuario_cpf"));
+
+                    // 3. Agora sim, você pega o objeto Usuario completo e guarda na ContaBancaria
+                    contaEncontrada.setUsuario_cpf(donoDaConta);
+
                 }
 
             } catch (SQLException e) {
@@ -223,7 +174,7 @@ public class ContaBancariaDAO {
             try {
 
                 stmt = connection.prepareStatement("SELECT * FROM ContaBancaria WHERE fk_usuario_cpf = ?");
-                stmt.setString(1, "cpfbusca");
+                stmt.setString(1, cpfBusca);
                 rs = stmt.executeQuery();
 
                 if (rs.next()) { // Se achou, monta o objeto
@@ -233,6 +184,12 @@ public class ContaBancariaDAO {
                     contaEncontrada.setAgencia(rs.getString("agencia"));
                     contaEncontrada.setSaldo(rs.getDouble("saldo"));
                     // ... (seta o resto dos dados)
+
+                    //Instanciar e setar o Usuario dono da conta!
+                    Usuario donoDaConta = new Usuario();
+                    donoDaConta.setCpf(rs.getString("fk_usuario_cpf")); 
+                    contaEncontrada.setUsuario_cpf(donoDaConta);
+
                 }
 
             } catch (SQLException e) {

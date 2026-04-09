@@ -1,65 +1,66 @@
 package com.github.soturnacrosta;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Scanner;
 
+import com.github.soturnacrosta.connection.ConnectionFactory;
 import com.github.soturnacrosta.model.dao.ContaBancariaDAO;
 import com.github.soturnacrosta.model.dao.TransacaoDAO;
-import com.github.soturnacrosta.connection.ConnectionFactory;
+import com.github.soturnacrosta.model.bean.ContaBancaria;
 import com.github.soturnacrosta.model.bean.Transacao;
 
-public class ContaBancaria { // cérebro do sistema. 
+public class Servicos {
 
-    Scanner input = new Scanner (System.in);
-    private String agencia;
-    private int numero;
-    protected double saldo;
-    static int contadorContas = 1000; //contador de numero da conta do cliente
     TransacaoDAO transacaoDao = new TransacaoDAO();
     ContaBancariaDAO contaDao = new ContaBancariaDAO();
     //private ArrayList <Transacao> historico = new ArrayList <> (); // para gerar o histórico de transações
     //static ArrayList <ContaBancaria> contasAbertas = new ArrayList<>(); // todas as classes compartilham do mesmo banco da lista
         
-        double sacar (double valor, String senhaSaque) {
+        double sacar (ContaBancaria contaOrigem, double valor, String senhaSaque) {
 
-            if (valor > saldo || valor <= 0) { // verifica se o saque não excede o saldo da conta      
+            if (valor > contaOrigem.getSaldo() || valor <= 0) { // verifica se o saque não excede o saldo da conta      
 
-                throw new SaldoInsuficienteException(this.saldo, valor);  
+                throw new SaldoInsuficienteException(contaOrigem.getSaldo(), valor);  
 
             }
 
             else { // sem saldo
 
-                saldo = saldo - valor;
+                contaOrigem.setSaldo(contaOrigem.getSaldo() - valor);
+
+                contaDao.update(contaOrigem);
 
                 System.out.println();
                 System.out.println("Saque efetuado com sucesso!");
                 System.out.println("Saque: " + MoedaUtilizada.formatar(valor) + ".");
-                System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
+                System.out.println("Novo saldo: " + MoedaUtilizada.formatar(contaOrigem.getSaldo()) + ".");
                 System.out.println();
 
-                return saldo; 
+                return contaOrigem.getSaldo(); 
                
             }
 
         }
 
-        double depositar (double valor) {
+        double depositar (ContaBancaria contaOrigem, double valor) {
 
             if (valor > 0) { // só pode depositar valores positivos
 
-                saldo = saldo + valor;
+                contaOrigem.setSaldo(contaOrigem.getSaldo() + valor);
+
+                // salva no banco de dados
+                contaDao.update(contaOrigem);
 
                 System.out.println();
                 System.out.println("Depósito efetuado com sucesso!");
                 System.out.println("Depósito: " + MoedaUtilizada.formatar(valor) + "R$.");
-                System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
+                System.out.println("Novo saldo: " + MoedaUtilizada.formatar(contaOrigem.getSaldo()) + ".");
                 System.out.println();
 
-                return saldo;
+                return contaOrigem.getSaldo();
 
             }
 
@@ -67,19 +68,19 @@ public class ContaBancaria { // cérebro do sistema.
 
                 System.out.println();
                 System.out.println("Erro! Digite apenas números válidos (maiores que 0).");
-                System.out.println("Saldo disponível: " + saldo + ".");
+                System.out.println("Saldo disponível: " + contaOrigem.getSaldo() + ".");
                 System.out.println();
 
             }
            
-            return saldo;
+            return contaOrigem.getSaldo();
 
         }
 
-        void realizarTed (double valor, String contaDestino, String descricao) {
+        void realizarTed (ContaBancaria contaOrigem, double valor, String contaDestino, String descricao) {
 
 
-            if (contarTedDiario(this.numero) >= 5) { // verifica limite diário de transações
+            if (contarTedDiario(contaOrigem.getNumero()) >= 5) { // verifica limite diário de transações
 
                 System.out.println();
                 System.out.println("Erro: Limite de 5 transações TED diárias atingido."); 
@@ -91,7 +92,7 @@ public class ContaBancaria { // cérebro do sistema.
 
             int destinoInt = Integer.parseInt(contaDestino); //converte int com int!
 
-            if (this.numero == destinoInt) { // compara os numeros das contas 
+            if (contaOrigem.getNumero() == destinoInt) { // compara os numeros das contas 
 
                 System.out.println();
                 System.out.println("Erro! A conta de destino não deve ser a conta remetente."); // se for a mesma conta
@@ -101,37 +102,44 @@ public class ContaBancaria { // cérebro do sistema.
 
             }
 
-            com.github.soturnacrosta.model.bean.ContaBancaria contaEncontrada = ContaBancaria.buscarContaPorNumero(contaDestino); //método de buscar contas
+            ContaBancaria contaEncontrada = buscarContaPorNumero(contaDestino); //método de buscar contas
 
             if (contaEncontrada != null) {
 
-                if (valor > saldo || valor <= 0) { // verifica se há saldo para transação
+                if (valor > contaOrigem.getSaldo() || valor <= 0) { // verifica se há saldo para transação
 
-                    throw new SaldoInsuficienteException(this.saldo, valor);
+                    throw new SaldoInsuficienteException(contaOrigem.getSaldo(), valor);
 
                 }
 
                 else {                       
 
-                    saldo = saldo - valor;  //debita o valor na propria conta
+                    contaOrigem.setSaldo(contaOrigem.getSaldo() - valor); //debita o valor na propria conta
 
-                    contaEncontrada.setSaldo(getSaldo()+valor);// acrescenta o valor na conta destino 
+                    contaEncontrada.setSaldo(contaEncontrada.getSaldo()+valor);// acrescenta o valor na conta destino 
 
                     Transacao transacao = new Transacao(); // além de instanciar a lista lá globalmente, instancie o objeto aqui
                     transacao.setValor(valor);
 
                     int numeroConta = Integer.parseInt(contaDestino); // faz a conversão para int
 
-                    com.github.soturnacrosta.model.bean.ContaBancaria contaDestinoObj = contaDao.readByNumero(numeroConta); //busca o número de conta na DAO
+                    ContaBancaria contaDestinoObj = contaDao.readByNumero(numeroConta); //busca o número de conta na DAO
                     
                     transacao.setContaDestino(contaDestinoObj);
+                    transacao.setContaOrigem(contaOrigem);
                     transacao.setDescricao(descricao);
+                    transacao.setData(new java.sql.Timestamp(System.currentTimeMillis()));
+                    
+                    transacaoDao.create(transacao);
+
+                    contaDao.update(contaOrigem); // Tira da origem no BD
+                    contaDao.update(contaEncontrada); // Bota no destino no BD
                     // adicione a lista global
                     
                     System.out.println();
                     System.out.println("Transação efetuada com sucesso!");
                     System.out.println("TED no valor de: " + MoedaUtilizada.formatar(valor) + ".");
-                    System.out.println("Novo saldo: " + MoedaUtilizada.formatar(saldo) + ".");
+                    System.out.println("Novo saldo: " + MoedaUtilizada.formatar(contaOrigem.getSaldo()) + ".");
                     System.out.println();
 
                 }
@@ -152,7 +160,7 @@ public class ContaBancaria { // cérebro do sistema.
 
             TransacaoDAO transacaoDao = new TransacaoDAO();
             // O DAO já deve trazer a lista filtrada e ordenada (SELECT ... LIMIT 10)
-            List<com.github.soturnacrosta.model.bean.Transacao> extrato = transacaoDao.readByConta(numeroConta);
+            List<Transacao> extrato = transacaoDao.readByConta(numeroConta);
 
             if (extrato.isEmpty()) {
 
@@ -221,7 +229,7 @@ public class ContaBancaria { // cérebro do sistema.
 
         }
 
-        public static com.github.soturnacrosta.model.bean.ContaBancaria buscarContaPorNumero(String numeroProcurado) { // conversor String > Conta bancária
+        public static ContaBancaria buscarContaPorNumero(String numeroProcurado) { // conversor String > Conta bancária
 
             try {
 
@@ -229,7 +237,7 @@ public class ContaBancaria { // cérebro do sistema.
 
                 int contaProcurada = Integer.parseInt(numeroProcurado);
 
-                com.github.soturnacrosta.model.bean.ContaBancaria contas = daoTemp.readByNumero(contaProcurada);
+                ContaBancaria contas = daoTemp.readByNumero(contaProcurada);
 
                 return daoTemp.readByNumero(contaProcurada);
 
@@ -241,39 +249,6 @@ public class ContaBancaria { // cérebro do sistema.
 
             }
 
-        }
-
-        // getters e setters
-        public String getAgencia() {
-            return agencia;
-        }
-
-        public void setAgencia(String agencia) {
-            this.agencia = agencia;
-        }
-
-        public int getConta() {
-            return numero;
-        }
-
-        public void setConta(int conta) {
-            this.numero = conta;
-        }
-
-        public double getSaldo() {
-            return saldo;
-        }
-
-        public void setSaldo(double saldo) {
-            this.saldo = saldo;
-        }
-
-        public int getNumero() {
-            return numero;
-        }
-
-        public void setNumero(int numero) {
-            this.numero = numero;
         }
 
 }

@@ -11,6 +11,21 @@ public class Transacao {
     private ContaBancaria contaDestino; // será convertida para texto na DAO
     private ContaBancaria contaOrigem; // chave estrangeira faz ligação por associação
     
+    public Transacao() {
+
+    }
+
+    public Transacao(int idTransacao, double valor, String descricao, Timestamp data, ContaBancaria contaDestino,
+            ContaBancaria contaOrigem) {
+                
+        this.idTransacao = idTransacao;
+        this.valor = valor;
+        this.descricao = descricao;
+        this.data = data;
+        this.contaDestino = contaDestino;
+        this.contaOrigem = contaOrigem;
+    }
+
     public int getIdTransacao() {
         return idTransacao;
     }
