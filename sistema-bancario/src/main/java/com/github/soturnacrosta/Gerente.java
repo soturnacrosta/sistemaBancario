@@ -3,6 +3,9 @@ package com.github.soturnacrosta;
 import com.github.soturnacrosta.model.dao.ContaBancariaDAO;
 import com.github.soturnacrosta.model.dao.UsuarioDAO;
 import com.github.soturnacrosta.model.bean.Usuario; //atenção nos imports!
+
+import java.util.Scanner;
+
 import com.github.soturnacrosta.model.bean.ContaBancaria;
 
 public class Gerente { // responsável por administrar as contas e os dados do usuário
@@ -16,13 +19,39 @@ public class Gerente { // responsável por administrar as contas e os dados do u
     void abrirConta (Usuario usuarioNovo) { //abre conta
 
         Usuario usuarioEncontrado = usuarioDao.readByCpf(usuarioNovo.getCpf()); //pega o cpf do usuarioNovo que é um objeto
+        ContaBancaria contaExistente = contaDao.readByCpf(usuarioNovo.getCpf());
 
-        if (usuarioEncontrado != null) { // compara o cpf que estou passando com o um cpf existente na lista!
-
+        if (usuarioEncontrado != null && "ATIVA".equals(contaExistente.getStatus())) { // compara o cpf que estou passando com o um cpf existente na lista!
+            
             System.out.println();
             System.out.println("Conta já aberta!");
             System.out.println("Uma conta corresponde ao CPF do usuário já foi encontrada no nosso banco de dados.");
             System.out.println();
+
+            return;
+
+        }
+
+        if (contaExistente != null && "ENCERRADA".equals(contaExistente.getStatus())) { //se a primeira condição é verdadeira, a segunda é ignorada
+            //logo é salvo de quebrar o sistema por um nulo buscando Status
+
+            Scanner input = new Scanner (System.in);
+            
+            System.out.println("\nConta antiga encontrada com status ENCERRADA.");
+            System.out.println("Deseja reativar esta conta? (S/N)");
+                String resposta = input.nextLine();
+
+                if (resposta.equalsIgnoreCase("S")) {
+
+                    contaExistente.setStatus("ATIVA");
+                    contaDao.update(contaExistente); // O seu update precisa salvar o novo status!
+
+                    System.out.println("Conta reativada com sucesso!");
+                    System.out.println();
+
+                }
+
+            return;
 
         }
 
@@ -63,9 +92,8 @@ public class Gerente { // responsável por administrar as contas e os dados do u
             ContaBancaria contaDoUsuario = contaDao.readByCpf(usuarioEncontrado.getCpf());
 
             if (contaDoUsuario != null && contaDoUsuario.getSaldo() == 0) { // verifica se o saldo é 0
-                
-                contaDao.delete(contaDoUsuario); // apaga de fora pra dentro. primeiro a conta e depois usuario
-                usuarioDao.delete(usuarioEncontrado);
+
+                contaDao.delete(contaDoUsuario); //NÃO PRECISA DE UPDATE!
 
                 System.out.println();
                 System.out.println("Conta e dados de " + usuarioEncontrado.getNome() + " excluídos com sucesso.");
@@ -96,6 +124,17 @@ public class Gerente { // responsável por administrar as contas e os dados do u
     void alterarUsuario (String usuarioAltCpf, String novoNome, String novaSenha, String novoCpf ) { //altera usuario
       
         Usuario usuarioEncontrado = usuarioDao.readByCpf(usuarioAltCpf); //buscar
+        ContaBancaria contaAlterar = contaDao.readByCpf(usuarioAltCpf); //busca pelo banco de dados!! 
+
+        if ("ENCERRADA".equals(contaAlterar.getStatus())) {
+
+            System.out.println();
+            System.out.println("Erro! Conta encontra-se encerrada.");
+            System.out.println();
+
+            return;
+
+        }
 
         if (usuarioEncontrado != null) {        
 

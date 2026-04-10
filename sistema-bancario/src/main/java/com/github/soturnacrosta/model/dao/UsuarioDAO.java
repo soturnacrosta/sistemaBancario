@@ -26,6 +26,8 @@ public class UsuarioDAO {
             stmt.setString(3, usuario.getNome());
             
             stmt.executeUpdate();
+
+            System.out.println();
             System.out.println("Usuário salvo com sucesso no banco de dados!");
 
         } catch (SQLException e) {
@@ -59,6 +61,7 @@ public class UsuarioDAO {
 
             stmt.executeUpdate();
 
+            System.out.println();
             System.out.println("Usuário atualizado com sucesso!");
 
         } 
@@ -93,15 +96,18 @@ public class UsuarioDAO {
 
             if (linhasAfetadas > 0) {
 
+                System.out.println();
                 System.out.println("Usuário excluído com sucesso do banco de dados!");
 
             }
             else {
             // Se cair aqui, você sabe na hora que o ID não chegou certo
+            System.out.println();
             System.out.println("Erro: Nenhum usuário encontrado com o ID " + usuario.getIdUsuario());
             
             }
 
+            System.out.println();
             System.out.println("Usuário excluído com sucesso!");
 
         } catch (SQLException e) {
@@ -137,6 +143,8 @@ public class UsuarioDAO {
                 if (rs.next()) { // Se achou, monta o objeto
 
                     usuarioEncontrado = new Usuario();
+
+                    usuarioEncontrado.setIdUsuario(rs.getInt("idUsuario"));
                     usuarioEncontrado.setCpf(rs.getString("cpf"));
                     usuarioEncontrado.setNome(rs.getString("nome"));   // Se faltar isso, fica null
                     usuarioEncontrado.setSenha(rs.getString("senha"));

@@ -30,6 +30,8 @@ public class ContaBancariaDAO {
             stmt.setString(3, conta.getUsuario_cpf().getCpf());
 
             stmt.executeUpdate(); // retorna os valores para a tabela
+
+            System.out.println();
             System.out.println("Conta bancária salva com sucesso no banco de dados!");
 
         } catch (SQLException e) {
@@ -56,14 +58,16 @@ public class ContaBancariaDAO {
         try {
 
             //não permitir atualizar o número da conta, então não coloca o número de conta como variável. apenas identifica no Stmt
-            stmt = connection.prepareStatement("UPDATE ContaBancaria SET agencia = ?, saldo = ?, fk_usuario_cpf = ? WHERE numero = ?");
+            stmt = connection.prepareStatement("UPDATE ContaBancaria SET agencia = ?, saldo = ?, fk_usuario_cpf = ?, status =? WHERE numero = ?");
             stmt.setString(1, conta.getAgencia());
             stmt.setDouble(2, conta.getSaldo());
             stmt.setString(3, conta.getUsuario_cpf().getCpf());
-            stmt.setInt(4, conta.getNumero());
+            stmt.setString(4, conta.getStatus());
+            stmt.setInt(5, conta.getNumero());
 
             stmt.executeUpdate();
 
+            System.out.println();
             System.out.println("Conta atualizada com sucesso!");
 
         } 
@@ -91,14 +95,17 @@ public class ContaBancariaDAO {
 
         try {
 
-            stmt = connection.prepareStatement("DELETE FROM ContaBancaria WHERE numero = ?");
+            stmt = connection.prepareStatement("UPDATE ContaBancaria SET status = 'ENCERRADA' WHERE numero = ?");
             stmt.setInt(1, conta.getNumero());
 
             stmt.executeUpdate();
 
+            System.out.println();
             System.out.println("Conta excluída com sucesso!");
 
-        } catch (SQLException e) {
+        } 
+        
+        catch (SQLException e) {
             // TODO Auto-generated catch block
             Logger.getLogger(ContaBancariaDAO.class.getName()).log(Level.SEVERE, null, e);
 
@@ -134,6 +141,7 @@ public class ContaBancariaDAO {
                     contaEncontrada.setNumero(rs.getInt("numero"));
                     contaEncontrada.setAgencia(rs.getString("agencia"));
                     contaEncontrada.setSaldo(rs.getDouble("saldo"));
+                    contaEncontrada.setStatus(rs.getString("status"));
                     
                     Usuario donoDaConta = new Usuario();
 
@@ -145,7 +153,9 @@ public class ContaBancariaDAO {
 
                 }
 
-            } catch (SQLException e) {
+            } 
+            
+            catch (SQLException e) {
                 // TODO Auto-generated catch block
                 Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, e);
 
@@ -183,6 +193,7 @@ public class ContaBancariaDAO {
                     contaEncontrada.setNumero(rs.getInt("numero"));
                     contaEncontrada.setAgencia(rs.getString("agencia"));
                     contaEncontrada.setSaldo(rs.getDouble("saldo"));
+                    contaEncontrada.setStatus(rs.getString("status"));
                     // ... (seta o resto dos dados)
 
                     //Instanciar e setar o Usuario dono da conta!

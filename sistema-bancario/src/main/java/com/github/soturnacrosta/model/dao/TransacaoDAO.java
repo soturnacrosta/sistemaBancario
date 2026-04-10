@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.soturnacrosta.connection.ConnectionFactory;
+import com.github.soturnacrosta.model.bean.ContaBancaria;
 import com.github.soturnacrosta.model.bean.Transacao;
 
 public class TransacaoDAO {
@@ -33,6 +34,8 @@ public class TransacaoDAO {
             // na tabela a contaOrigem é int
 
             stmt.executeUpdate();
+
+            System.out.println();
             System.out.println("Transacão salva com sucesso no banco de dados!");
 
         }
@@ -72,15 +75,22 @@ public class TransacaoDAO {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                com.github.soturnacrosta.model.bean.Transacao t = new com.github.soturnacrosta.model.bean.Transacao();
+
+                Transacao t = new Transacao();
+
+                t.setIdTransacao(rs.getInt("idTransacao")); //busca e informa o ID
                 t.setValor(rs.getDouble("valor"));
                 t.setDescricao(rs.getString("descricao"));
                 t.setData(rs.getTimestamp("data")); // Se você tiver data no banco
 
-                // Aqui você teria que buscar os objetos ContaBancaria se quiser o Bean completo
-                // Mas para um extrato simples, apenas os dados acima já bastam
+                //Para mostrar o destinatário:
+                ContaBancaria contaDestino = new ContaBancaria();
+
+                contaDestino.setNumero(rs.getInt("contaDestino"));
+                t.setContaDestino(contaDestino);
                 
                 historicoNoBanco.add(t);
+
             }
 
         }

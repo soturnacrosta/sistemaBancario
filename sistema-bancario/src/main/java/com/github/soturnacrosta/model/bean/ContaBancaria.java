@@ -6,6 +6,7 @@ public class ContaBancaria {
     private String agencia;
     private double saldo;
     private Usuario usuario_cpf;
+    private String status;
 
     public ContaBancaria() {
 
@@ -34,6 +35,12 @@ public class ContaBancaria {
     }
     public void setUsuario_cpf(Usuario usuario_cpf) {
         this.usuario_cpf = usuario_cpf;
+    }
+    public String getStatus() {
+    return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
    
 }

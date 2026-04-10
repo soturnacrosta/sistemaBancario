@@ -63,6 +63,16 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                         ContaBancariaDAO cDao = new ContaBancariaDAO();
                                         this.contaBancaria = cDao.readByCpf(usuarioAutenticado.getCpf());
 
+                                        if (this.contaBancaria != null && this.contaBancaria.getStatus().equals("ENCERRADA")) {
+                                            
+                                            System.out.println("\nErro: Esta conta encontra-se ENCERRADA.");
+                                            System.out.println("Por favor, procure a gerência para mais informações.\n");
+                                            
+                                            usuarioAutenticado = null; // Derruba o login
+                                            this.contaBancaria = null; // Limpa a variável
+                                            
+                                            break; // Sai do case e volta pro menu principal (não entra no while do menuUsuario)
+}
                                         while (!menuUsuario) {
 
                                             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX BEM VINDO XXXXXXXXXXXXXXXXXXXXXXXXXXX");

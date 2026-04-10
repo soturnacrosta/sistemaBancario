@@ -24,6 +24,7 @@ public class Transacao {
         this.data = data;
         this.contaDestino = contaDestino;
         this.contaOrigem = contaOrigem;
+        
     }
 
     public int getIdTransacao() {

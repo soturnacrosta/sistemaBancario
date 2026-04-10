@@ -104,6 +104,16 @@ public class Servicos {
 
             ContaBancaria contaEncontrada = buscarContaPorNumero(contaDestino); //método de buscar contas
 
+            if (contaEncontrada != null && "ENCERRADA".equals(contaEncontrada.getStatus())) { //utilize o objeto ja criado pra buscar, nada de uma string
+
+                System.out.println();
+                System.out.println("Erro! A conta de destino encontra-se encerrada."); // se for a mesma conta
+                System.out.println();
+
+                return;
+
+            }
+
             if (contaEncontrada != null) {
 
                 if (valor > contaOrigem.getSaldo() || valor <= 0) { // verifica se há saldo para transação
@@ -172,14 +182,14 @@ public class Servicos {
 
             int contador = 0;
 
-            for (int i = extrato.size() -1; i>= 0 && contador < 10; i --){ // define o teto como 10
+            for (int i = 0; i < extrato.size() && contador < 10; i++){ // define o teto como 10
                 
                 Transacao t = extrato.get(i); // imprime o extrato pegando os dados na clase Transacao
 
                 System.out.println();
                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX EXTRATO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
                 System.out.println("ID Transcao: " + t.getIdTransacao());
-                System.out.println("Destinatário: " + t.getContaDestino());
+                System.out.println("Destinatário: " + t.getContaDestino().getNumero());
                 System.out.println("Valor: " + MoedaUtilizada.formatar(t.getValor()));
                 System.out.println("Data: " + t.getData());
                 System.out.println("Descrição: " + t.getDescricao());
