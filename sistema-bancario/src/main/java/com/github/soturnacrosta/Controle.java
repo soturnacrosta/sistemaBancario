@@ -64,7 +64,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                         this.contaBancaria = cDao.readByCpf(usuarioAutenticado.getCpf());
 
                                         if (this.contaBancaria != null && this.contaBancaria.getStatus().equals("ENCERRADA")) {
-                                            
+
                                             System.out.println("\nErro: Esta conta encontra-se ENCERRADA.");
                                             System.out.println("Por favor, procure a gerência para mais informações.\n");
                                             
@@ -337,12 +337,6 @@ public class Controle { // responsável pelos menus de contato ao usuário
             ContaBancaria contaBean = contaDao.readByCpf(usuarioAutenticado.getCpf());
 
         if (contaBean != null) {
-                // 2. Passamos o objeto que acabamos de buscar no banco
-                // Assumindo que o método imprimirExtrato está no seu Bean ou Service
-                ContaBancaria contaOriginal = new ContaBancaria();
-
-                contaOriginal.setNumero(contaBean.getNumero());
-                contaOriginal.setSaldo(contaBean.getSaldo());
 
                 servico.imprimirExtrato(contaBean.getNumero());       
 

@@ -249,8 +249,8 @@ public class Servicos {
 
                 ContaBancaria contas = daoTemp.readByNumero(contaProcurada);
 
-                return daoTemp.readByNumero(contaProcurada);
-
+                return contas;
+                
             }
 
             catch (Exception e) {
