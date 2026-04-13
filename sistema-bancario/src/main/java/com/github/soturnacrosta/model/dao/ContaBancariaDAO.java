@@ -19,17 +19,27 @@ public class ContaBancariaDAO {
 
         Connection connection = ConnectionFactory.getConnection(); // pega a conexão
         PreparedStatement stmt = null;
+        ResultSet rs = null; // 
 
         try {
 
             // insere os valores através do statement
-            stmt = connection.prepareStatement("INSERT INTO ContaBancaria (agencia, saldo, fk_usuario_cpf) VALUES (?, ?, ?)");
+            stmt = connection.prepareStatement("INSERT INTO ContaBancaria (agencia, saldo, fk_usuario_cpf) VALUES (?, ?, ?)",
+            java.sql.Statement.RETURN_GENERATED_KEYS); //return genareted keys retorna o número da conta na mesma hora da criação
             // quando o atributo for auto-increment, não deve ser enviado via insert. o proprio MYSQL fará o serviço
             stmt.setString(1, conta.getAgencia());
             stmt.setDouble(2, conta.getSaldo());
             stmt.setString(3, conta.getUsuario_cpf().getCpf());
 
             stmt.executeUpdate(); // retorna os valores para a tabela
+
+            rs = stmt.getGeneratedKeys();
+
+            if (rs.next()) {
+                // 3. Atualiza o objeto Java na mesma hora!
+                conta.setNumero(rs.getInt(1)); 
+
+            }
 
             System.out.println();
             System.out.println("Conta bancária salva com sucesso no banco de dados!");

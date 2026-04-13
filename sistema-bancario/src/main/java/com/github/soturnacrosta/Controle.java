@@ -123,6 +123,8 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                                     case "0": // sair
 
                                                         menuUsuario = true;
+                                                        input.close();
+
                                                         break;
                     
                                                     default:

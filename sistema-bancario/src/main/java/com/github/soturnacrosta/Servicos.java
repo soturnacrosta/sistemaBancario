@@ -90,8 +90,22 @@ public class Servicos {
 
             }
 
-            int destinoInt = Integer.parseInt(contaDestino); //converte int com int!
+            int destinoInt;
 
+            try { // conversão para int impedindo nulos
+
+                destinoInt = Integer.parseInt(contaDestino);
+
+            } 
+            
+            catch (NumberFormatException e) {
+
+                System.out.println("\nErro! O formato da conta destino é inválido.\n");
+
+                return;
+
+            }
+            
             if (contaOrigem.getNumero() == destinoInt) { // compara os numeros das contas 
 
                 System.out.println();
@@ -130,12 +144,8 @@ public class Servicos {
 
                     Transacao transacao = new Transacao(); // além de instanciar a lista lá globalmente, instancie o objeto aqui
                     transacao.setValor(valor);
-
-                    int numeroConta = Integer.parseInt(contaDestino); // faz a conversão para int
-
-                    ContaBancaria contaDestinoObj = contaDao.readByNumero(numeroConta); //busca o número de conta na DAO
                     
-                    transacao.setContaDestino(contaDestinoObj);
+                    transacao.setContaDestino(contaEncontrada);
                     transacao.setContaOrigem(contaOrigem);
                     transacao.setDescricao(descricao);
                     transacao.setData(new java.sql.Timestamp(System.currentTimeMillis()));
@@ -189,7 +199,8 @@ public class Servicos {
                 System.out.println();
                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX EXTRATO XXXXXXXXXXXXXXXXXXXXXXXXXXX");
                 System.out.println("ID Transcao: " + t.getIdTransacao());
-                System.out.println("Destinatário: " + t.getContaDestino().getNumero());
+                System.out.println("Remetente: " + t.getContaOrigem().getNumero()); //busca la na dao, tem que montar a informação
+                System.out.println("Destinatário: " + t.getContaDestino().getNumero()); //busca la na dao, tem que montar a informação
                 System.out.println("Valor: " + MoedaUtilizada.formatar(t.getValor()));
                 System.out.println("Data: " + t.getData());
                 System.out.println("Descrição: " + t.getDescricao());

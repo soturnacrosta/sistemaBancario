@@ -88,6 +88,11 @@ public class TransacaoDAO {
 
                 contaDestino.setNumero(rs.getInt("contaDestino"));
                 t.setContaDestino(contaDestino);
+
+                ContaBancaria contaOrigem = new ContaBancaria();
+                
+                contaOrigem.setNumero(rs.getInt("fk_conta_origem"));
+                t.setContaOrigem(contaOrigem);
                 
                 historicoNoBanco.add(t);
 
