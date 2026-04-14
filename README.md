@@ -1,6 +1,6 @@
 # Desafio portfólio: Sistema Bancário
 
-Sistema bancário com integração banco de dados e autenticação hashing (BCrypt). O sistema segue o padrão DAO (Data Access Object),
+Sistema bancário com integração banco de dados e autenticação hashing (BCrypt). O sistema segue o padrão DAO (Data Access Object).
 
 ## Objetivo:
 
