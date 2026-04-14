@@ -35,6 +35,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
         if (contaExistente != null && "ENCERRADA".equals(contaExistente.getStatus())) { //se a primeira condição é verdadeira, a segunda é ignorada
             //logo é salvo de quebrar o sistema por um nulo buscando Status
 
+            @SuppressWarnings("resource") //avisa a IDE que não precisa fechar scanner
             Scanner input = new Scanner (System.in);
             
             System.out.println("\nConta antiga encontrada com status ENCERRADA.");
@@ -98,7 +99,7 @@ public class Gerente { // responsável por administrar as contas e os dados do u
                 System.out.println();
 
                 return;
-                
+
             }
 
             if (contaDoUsuario != null && contaDoUsuario.getSaldo() == 0) { // verifica se o saldo é 0
