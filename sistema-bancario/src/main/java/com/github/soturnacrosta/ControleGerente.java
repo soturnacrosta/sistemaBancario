@@ -62,6 +62,7 @@ public class ControleGerente {
                                 case "0": // sair 
 
                                     menuGerente = true;
+
                                     break;
 
                                 default:
@@ -149,7 +150,7 @@ public class ControleGerente {
                     
                     usuario.setCpf(abrirCPF); //como o construtor mudou do original pro bean, devemos adicionar o dados em seguida
                     usuario.setNome(abrirNome);
-                    usuario.setSenha(abrirSenha);
+                    usuario.setSenha(SegurancaUtil.gerarHash(abrirSenha));
 
                     gerente.abrirConta(usuario); // chama o método em Gerente
 
@@ -217,7 +218,7 @@ public class ControleGerente {
             System.out.println("Digite a senha:"); // verifica a senha
                 String senhaFecharConta = input.nextLine();
                     
-            if (!usuarioEncontrado.getSenha().equals(senhaFecharConta)) {
+            if (!SegurancaUtil.verificarSenha(senhaFecharConta, usuarioEncontrado.getSenha())) {
 
                 System.out.println();
                 System.out.println("Ops! Senha incorreta. Tente novamente.");
@@ -290,7 +291,7 @@ public class ControleGerente {
             String senhaAlt = input.nextLine();
 
         // terceira clausula de guarda
-        if (!usuarioEncontrado.getSenha().equals(senhaAlt)) { // verificação de senha
+        if (!SegurancaUtil.verificarSenha(senhaAlt, usuarioEncontrado.getSenha())) { // verificação de senha
 
             System.out.println();
             System.out.println("Ops! Senha incorreta. Tente novamente.");
@@ -338,7 +339,7 @@ public class ControleGerente {
 
         novoCpf = FormatadorCpf.formatarCpf(novoCpf); // DEVE Formatar a visualização para encaixar com o cpf da conta aberta
 
-        gerente.alterarUsuario(alterarUsuarioCpf, novoNome, novaSenha,novoCpf);
+        gerente.alterarUsuario(alterarUsuarioCpf, novoNome, SegurancaUtil.gerarHash(novaSenha), novoCpf);
 
         cpfAceito = true;
 

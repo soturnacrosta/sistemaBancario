@@ -10,7 +10,6 @@ import com.github.soturnacrosta.model.dao.UsuarioDAO;
 public class Controle { // responsável pelos menus de contato ao usuário
 
     Usuario usuarioAutenticado = null;
-    private String escolha; // switches tem que ser public
     private boolean condicao = false;
     ContaBancaria contaBancaria = new ContaBancaria();
     Scanner input = new Scanner (System.in);
@@ -21,6 +20,8 @@ public class Controle { // responsável pelos menus de contato ao usuário
         void painelControle () {
 
             while (!condicao) {
+
+                String escolha; // switches tem que ser public
 
                         try { // trata exceções traduzidas de camadas mais baixas, mas agora no mais alto nível
 
@@ -55,7 +56,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                     loginCliente = FormatadorCpf.formatarCpf(loginCliente); // formata o cpf pra fazer o login
                                     Usuario usuarioEncontrado = usuarioDao.readByCpf(loginCliente); //pega o cpf do usuarioNovo que é um objeto
                                     //verifica cpf e senha de uma vez e caso seja válido, tira o null e inicia o login.
-                                    if (usuarioEncontrado != null && usuarioEncontrado.getSenha().equals(senhaCliente)) {
+                                    if (usuarioEncontrado != null && SegurancaUtil.verificarSenha(senhaCliente, usuarioEncontrado.getSenha())) {
 
                                         usuarioAutenticado = usuarioEncontrado;
 
@@ -123,7 +124,6 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                                     case "0": // sair
 
                                                         menuUsuario = true;
-                                                        input.close();
 
                                                         break;
                     
@@ -164,6 +164,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
                                     System.out.println();
 
                                     condicao = true;
+                                    input.close();
 
                                     break;
 
@@ -200,7 +201,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("Digite a senha:");
                 String senhaSaque = input.nextLine();
 
-            if (!usuarioAutenticado.getSenha().equals(senhaSaque)) {
+            if (!SegurancaUtil.verificarSenha(senhaSaque, usuarioAutenticado.getSenha())) {
 
                 System.out.println("\nErro: Senha incorreta. Operação cancelada.\n");
 
@@ -267,7 +268,7 @@ public class Controle { // responsável pelos menus de contato ao usuário
             System.out.println("Digite a senha:");
                 String senhaTed = input.nextLine();
 
-            if (!usuarioAutenticado.getSenha().equals(senhaTed)) { // verifica a senha
+            if (!SegurancaUtil.verificarSenha(senhaTed, usuarioAutenticado.getSenha())) { // verifica a senha
 
                 System.out.println("\nErro: Senha incorreta. Operação cancelada.\n");
 

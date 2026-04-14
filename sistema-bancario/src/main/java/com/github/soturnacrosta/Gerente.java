@@ -91,6 +91,16 @@ public class Gerente { // responsável por administrar as contas e os dados do u
 
             ContaBancaria contaDoUsuario = contaDao.readByCpf(usuarioEncontrado.getCpf());
 
+            if ("ENCERRADA".equals(contaDoUsuario.getStatus())) {
+
+                 System.out.println();
+                System.out.println("Erro! Conta encontra-se encerrada.");
+                System.out.println();
+
+                return;
+                
+            }
+
             if (contaDoUsuario != null && contaDoUsuario.getSaldo() == 0) { // verifica se o saldo é 0
 
                 contaDao.delete(contaDoUsuario); //NÃO PRECISA DE UPDATE!

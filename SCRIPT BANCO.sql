@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `sistema_bancario`.`Usuario` ;
 CREATE TABLE IF NOT EXISTS `sistema_bancario`.`Usuario` (
   `idUsuario` INT NOT NULL AUTO_INCREMENT,
   `cpf` VARCHAR(14) NOT NULL,
-  `senha` VARCHAR(64) NOT NULL,
+  `senha` VARCHAR(255) NOT NULL,
   `nome` VARCHAR(45) NOT NULL,
   UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) VISIBLE,
   PRIMARY KEY (`idUsuario`))
