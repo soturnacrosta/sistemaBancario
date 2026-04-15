@@ -12,15 +12,15 @@ Este documento tem como objetivo servir de orientação técnica para futuros in
 ### Back-end:
 
 - **JAVA 21**: Linguagem de programação base para lógica da aplicação.
-- **MySQL**: Banco de dados relacional para salvar os dados do sistema.
+- **MySQL**: Banco de dados relacional para persistência dos dados do sistema.
 - **BCrypt**: Hashing code para criptografia de dados de usuários.
 
 ## Funcionalidades:
 
 - **Menu interativo**: Roda um menu simples e interativo em 'loop' para o usuário transitar entre as diferentes operações bancárias sem precisar interromper o fluxo.
-- **Login usuário e login gerente**: Realiza o login de usuário ou gerente (superusuário) no sistema.
+- **Login usuário e login gerente**: Realiza o autenticação de usuário e gerente (superusuário) no sistema.
 - **Operações bancárias**: Permite saque, depósito, transferências TED, extrato, ver saldo e detalhes da conta.
-- **Gerenciamento de contas**: Possibilita a abertura, alteração e encerramento de contas.
+- **Gerenciamento de contas**: Permite a abertura, alteração e encerramento de contas.
 
 ## Como rodar o projeto:
 
@@ -28,7 +28,7 @@ Este documento tem como objetivo servir de orientação técnica para futuros in
 
 Java 21 ou superior;
 MySQL Server.
-Maven 3.9+: (para gerenciamento de dependências).
+Maven 3.9+ (para gerenciamento de dependências)
 
 2. **Clonando o repositório**
 
@@ -76,6 +76,6 @@ Login: admin
 Senha: admin
 
 **Devido ao uso de BCrypt, senhas inseridas manualmente direto no SQL não funcionarão no login.**
-**Sempre utilize o menu do Gerente para criar novos usuários e garantir o hashing correto das credenciais.**
+**Sempre utilize o menu do Gerente para criar novos usuários e garantir o hash correto das credenciais.**
 
-Todas as informações necessárias para construir o sistema estão no arquivo Sistema Bancario.pdf;
+Todas as informações necessárias para construir o sistema estão no arquivo Sistema Bancario.pdf.
